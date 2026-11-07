@@ -3,207 +3,319 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="description" content="抽一个学历、学校、专业，在 12 周秋招里投简历、过笔试、答面试题。">
-<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <title>秋招求生记</title>
+<meta name="description" content="抽一个学历、学校、专业，熬过简历海投、面试修罗场和 HR 博弈，看你最后是什么秋招身份。">
+<meta property="og:title" content="秋招求生记">
+<meta property="og:description" content="抽身份、海投、面试、谈薪，12 周秋招模拟器。">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Sans+SC:wght@400;500;700&family=ZCOOL+XiaoWei&family=JetBrains+Mono:wght@500;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Sans+SC:wght@400;500;700;900&family=ZCOOL+KuaiLe&family=Rubik:wght@500;700;800&display=swap">
 <style>
-/* Layout: 一张"求职登记表"——冷灰蓝办公用纸 + 藏青墨水 + 印泥红公章；桌面双栏（岗位 | 投递），手机单栏，底部固定"结束本周" */
+/* 布局：游戏 HUD（章节进度 + 四条属性）在上；行动按钮一行；岗位 | 流程 双栏；底部固定"结束本周"。
+   视觉：粗描边 + 错位投影的卡通游戏卡片，天蓝底点阵，印章保留为身份元素。 */
 :root{
-  --paper:#e9edf2; --sheet:#fbfcfd; --ink:#1c2938; --muted:#5b6878; --rule:#c8d1db; --soft:#f1f4f7;
-  --accent:#24507d; --accent-ink:#ffffff; --stamp:#c42f2a; --ok:#2c7a4b; --warn:#a86a12;
-  --f-display:"ZCOOL XiaoWei","Songti SC","STSong",serif;
+  --bg:#e6efff; --dot:#cbdcff; --card:#ffffff; --soft:#f1f5fe; --ink:#1c2042; --muted:#5d6488;
+  --edge:#1c2042; --sh:#1c2042;
+  --orange:#ff7a3d; --blue:#3b78ff; --mint:#12b386; --purple:#8a5cff; --yellow:#f3b21f; --red:#ff4659;
+  --on:#1a1430;
+  --f-display:"ZCOOL KuaiLe","PingFang SC","Microsoft YaHei",sans-serif;
   --f-body:"Noto Sans SC","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+  --f-num:"Rubik","Noto Sans SC",system-ui,sans-serif;
   --f-stamp:"Ma Shan Zheng","Kaiti SC","STKaiti",serif;
-  --f-mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+  color-scheme:light;
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --paper:#10161e; --sheet:#18212c; --ink:#e2e8ef; --muted:#93a1b2; --rule:#2c3846; --soft:#1f2935;
-  --accent:#7fb0e0; --accent-ink:#0d1620; --stamp:#f0605a; --ok:#5fbf86; --warn:#e2a64a; color-scheme:dark}}
+  --bg:#13162e; --dot:#1d2246; --card:#1f2347; --soft:#272c58; --ink:#eef0ff; --muted:#a3a9d2;
+  --edge:#4b5199; --sh:#06071a;
+  --orange:#ff8b55; --blue:#6f9cff; --mint:#33d2a2; --purple:#a98bff; --yellow:#ffca4d; --red:#ff6d7c; color-scheme:dark}}
 :root[data-theme="dark"]{
-  --paper:#10161e; --sheet:#18212c; --ink:#e2e8ef; --muted:#93a1b2; --rule:#2c3846; --soft:#1f2935;
-  --accent:#7fb0e0; --accent-ink:#0d1620; --stamp:#f0605a; --ok:#5fbf86; --warn:#e2a64a; color-scheme:dark}
+  --bg:#13162e; --dot:#1d2246; --card:#1f2347; --soft:#272c58; --ink:#eef0ff; --muted:#a3a9d2;
+  --edge:#4b5199; --sh:#06071a;
+  --orange:#ff8b55; --blue:#6f9cff; --mint:#33d2a2; --purple:#a98bff; --yellow:#ffca4d; --red:#ff6d7c; color-scheme:dark}
 
 *{box-sizing:border-box}
-body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.6}
-.wrap{max-width:1080px;margin:0 auto;padding-block:20px 120px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:18px}
-.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
-.muted{color:var(--muted)}
+html{-webkit-text-size-adjust:100%}
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0;background:var(--bg);background-image:radial-gradient(var(--dot) 1.4px,transparent 1.4px);background-size:22px 22px;color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.6}
+[hidden]{display:none!important}
+img{max-width:100%}
+button{font:inherit;color:inherit;cursor:pointer}
+button:disabled{cursor:not-allowed}
+:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
 h1,h2,h3{margin:0;text-wrap:balance}
-button{font:inherit;cursor:pointer;color:inherit}
-button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-button:disabled{cursor:not-allowed;opacity:.45}
+.num{font-family:var(--f-num);font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)}
+.wrap{max-width:1100px;margin:0 auto;padding-block:16px 128px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:16px}
 
-.masthead{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap}
-.brand{font-family:var(--f-display);font-size:clamp(28px,5vw,40px);letter-spacing:.04em;line-height:1.1}
-.brand small{display:block;font-family:var(--f-body);font-size:13px;color:var(--muted);letter-spacing:.12em;margin-top:6px}
+.card{background:var(--card);border:2.5px solid var(--edge);border-radius:18px;box-shadow:4px 4px 0 var(--sh)}
+.btn{border:2.5px solid var(--edge);border-radius:14px;box-shadow:3px 3px 0 var(--sh);background:var(--orange);color:var(--on);padding:10px 18px;font-weight:700;transition:transform .08s,box-shadow .08s}
+.btn:not(:disabled):hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--sh)}
+.btn:not(:disabled):active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--sh)}
+.btn:disabled{opacity:.45}
+.btn.alt{background:var(--card);color:var(--ink)}
+.btn.blue{background:var(--blue);color:#fff}
+.btn.mint{background:var(--mint);color:var(--on)}
+.btn.sm{padding:5px 11px;font-size:13px;border-radius:10px;box-shadow:2px 2px 0 var(--sh)}
+.chip{display:inline-flex;align-items:center;font-size:12px;font-weight:500;padding:1px 9px;border-radius:99px;border:1.5px solid var(--edge);background:var(--soft);white-space:nowrap}
+.chip.red{background:var(--red);color:#fff;border-color:var(--edge)}
+.chip.green{background:var(--mint);color:var(--on)}
+.chip.amber{background:var(--yellow);color:var(--on)}
+.chip.blue{background:var(--blue);color:#fff}
+.chip.purple{background:var(--purple);color:#fff}
 
-.sheet{background:var(--sheet);border:1px solid var(--rule);border-radius:4px}
-.btn{border:1px solid var(--accent);background:var(--accent);color:var(--accent-ink);padding:9px 16px;border-radius:4px;font-weight:500}
-.btn.ghost{background:transparent;color:var(--accent)}
-.btn.small{padding:5px 10px;font-size:13px}
-.btn:not(:disabled):hover{filter:brightness(1.08)}
+.stamp{font-family:var(--f-stamp);color:var(--red);border:3px double currentColor;border-radius:8px;padding:0 10px;display:inline-block;transform:rotate(-7deg);line-height:1.35;letter-spacing:.06em;white-space:nowrap;background:color-mix(in srgb,var(--card) 70%,transparent)}
+.stamp.green{color:var(--mint)} .stamp.amber{color:var(--yellow)} .stamp.grey{color:var(--muted)} .stamp.blue{color:var(--blue)} .stamp.purple{color:var(--purple)}
+.stamp.in{animation:stampIn .4s cubic-bezier(.2,1.5,.4,1) both}
+@keyframes stampIn{from{transform:rotate(-7deg) scale(2);opacity:0}to{transform:rotate(-7deg) scale(1);opacity:1}}
 
-/* 登记表 */
-.form{max-width:640px;width:100%;margin:0 auto;position:relative;overflow:hidden}
-.form-head{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 18px;border-bottom:2px solid var(--ink)}
-.form-title{font-family:var(--f-display);font-size:22px;letter-spacing:.1em}
-.frow{display:grid;grid-template-columns:96px 1fr;border-bottom:1px solid var(--rule)}
-.frow label{padding:12px 14px;background:var(--soft);border-right:1px solid var(--rule);font-size:13px;color:var(--muted);letter-spacing:.2em;display:flex;align-items:center}
-.frow .cell{padding:10px 14px;font-size:20px;font-weight:700;min-height:52px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;min-width:0}
-.frow .cell .sub{font-size:13px;font-weight:400;color:var(--muted)}
-.chip{display:inline-block;font-size:12px;font-weight:500;padding:1px 8px;border-radius:3px;border:1px solid var(--rule);color:var(--muted);white-space:nowrap}
-.chip.red{border-color:var(--stamp);color:var(--stamp)}
-.chip.green{border-color:var(--ok);color:var(--ok)}
-.chip.amber{border-color:var(--warn);color:var(--warn)}
-.chip.blue{border-color:var(--accent);color:var(--accent)}
-.form-foot{padding:16px 18px;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-.howto{max-width:640px;margin:0 auto;color:var(--muted);font-size:14px;display:grid;gap:6px}
-.howto b{color:var(--ink)}
-.path{display:flex;flex-wrap:wrap;gap:4px;align-items:center;font-size:13px}
-.path span{padding:1px 8px;border:1px dashed var(--rule);border-radius:3px}
+/* 标题 */
+.masthead{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.brand{font-family:var(--f-display);font-size:clamp(30px,6vw,46px);line-height:1;letter-spacing:.04em;display:flex;align-items:center;gap:10px}
+.brand .logo{display:inline-grid;place-items:center;width:1.25em;height:1.25em;border:2.5px solid var(--edge);border-radius:12px;background:var(--orange);color:var(--on);box-shadow:3px 3px 0 var(--sh);font-size:.7em;transform:rotate(-6deg)}
+.brand small{display:block;font-family:var(--f-body);font-size:12px;letter-spacing:.2em;color:var(--muted);margin-top:6px}
 
-.stamp{font-family:var(--f-stamp);color:var(--stamp);border:3px double currentColor;border-radius:6px;padding:0 10px;display:inline-block;transform:rotate(-7deg);line-height:1.4;letter-spacing:.06em;white-space:nowrap}
-.stamp.green{color:var(--ok)} .stamp.amber{color:var(--warn)} .stamp.grey{color:var(--muted)}
-.stamp.in{animation:stampIn .35s cubic-bezier(.2,1.4,.4,1) both}
-@keyframes stampIn{from{transform:rotate(-7deg) scale(1.8);opacity:0}to{transform:rotate(-7deg) scale(1);opacity:1}}
-.form .seal{position:absolute;right:18px;top:70px;font-size:26px;opacity:.9}
+/* HUD */
+.hud{padding:14px 16px;display:grid;gap:12px}
+.hud-top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.who{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:14px;min-width:0}
+.who b{font-size:16px}
+.weekbox{display:flex;align-items:center;gap:10px}
+.weekbox .w{font-family:var(--f-num);font-weight:800;font-size:22px}
+.weekbox .d{font-size:12px;color:var(--muted)}
+.chapters{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.chapters div{border:2px solid var(--edge);border-radius:10px;padding:3px 8px;font-size:12px;background:var(--soft);color:var(--muted);display:flex;gap:6px;align-items:center;min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.chapters div b{font-family:var(--f-num)}
+.chapters div.on{background:var(--yellow);color:var(--on);font-weight:700}
+.chapters div.done{background:var(--card);color:var(--ink)}
+.attrs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px 16px}
+.attr{position:relative;display:grid;gap:4px;min-width:0}
+.attr .lab{display:flex;justify-content:space-between;align-items:baseline;font-size:12.5px;font-weight:500;gap:6px}
+.attr .lab b{font-family:var(--f-num);font-size:16px}
+.attr .lab small{color:var(--muted);font-weight:400}
+.bar{height:14px;border:2px solid var(--edge);border-radius:99px;background:var(--soft);overflow:hidden}
+.bar i{display:block;height:100%;border-radius:99px;transition:width .8s cubic-bezier(.2,.9,.3,1.15);background:var(--c);box-shadow:inset 0 -3px 0 rgba(0,0,0,.14)}
+.attr.low .bar{animation:pulse 1.2s ease-in-out infinite}
+@keyframes pulse{50%{box-shadow:0 0 0 3px color-mix(in srgb,var(--red) 45%,transparent)}}
+.float{position:absolute;right:0;top:-6px;font-family:var(--f-num);font-weight:800;font-size:15px;pointer-events:none;animation:floatUp 1.4s ease-out forwards}
+.float.up{color:var(--mint)} .float.down{color:var(--red)}
+@keyframes floatUp{0%{opacity:0;transform:translateY(8px)}15%{opacity:1}100%{opacity:0;transform:translateY(-26px)}}
+.shake{animation:shake .4s}
+@keyframes shake{20%,60%{transform:translateX(-4px)}40%,80%{transform:translateX(4px)}}
+.minis{display:flex;gap:14px;flex-wrap:wrap;font-size:13px;color:var(--muted);align-items:center}
+.minis b{color:var(--ink);font-family:var(--f-num)}
+.pips{display:inline-flex;gap:4px;vertical-align:middle}
+.pips i{width:13px;height:13px;border-radius:50%;border:2px solid var(--edge);background:var(--soft)}
+.pips i.on{background:var(--orange)}
 
-.statgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px 16px;padding:14px 18px;border-bottom:1px solid var(--rule)}
-.meter{display:grid;gap:3px;font-size:12px;color:var(--muted)}
-.meter .lab{display:flex;justify-content:space-between}
-.meter .lab b{color:var(--ink);font-family:var(--f-mono)}
-.bar{height:6px;background:var(--soft);border:1px solid var(--rule);border-radius:3px;overflow:hidden}
-.bar i{display:block;height:100%;background:var(--accent)}
-.bar.san i{background:var(--ok)} .bar.san.low i{background:var(--stamp)} .bar.san.mid i{background:var(--warn)}
+/* 行动 */
+.acts{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px}
+.act{border:2.5px solid var(--edge);border-radius:14px;background:var(--card);box-shadow:3px 3px 0 var(--sh);padding:9px 10px;text-align:left;display:grid;gap:2px;transition:transform .08s,box-shadow .08s;min-width:0}
+.act b{font-size:14.5px;display:flex;justify-content:space-between;gap:4px}
+.act b .pips i{width:9px;height:9px;border-width:1.5px;background:var(--orange)}
+.act span{font-size:11.5px;color:var(--muted);line-height:1.35}
+.act:not(:disabled):hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--sh);background:var(--soft)}
+.act:not(:disabled):active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--sh)}
+.act:disabled{opacity:.42}
 
-/* 游戏主界面 */
-.top{display:grid;grid-template-columns:1fr auto;gap:10px 18px;padding:14px 18px;align-items:center}
-.who{font-size:16px;display:flex;flex-wrap:wrap;gap:6px;align-items:center;min-width:0}
-.who b{font-size:18px}
-.week{text-align:right}
-.week .big{font-size:20px;font-weight:700}
-.prog{height:4px;background:var(--soft);margin-top:6px;border-radius:2px;overflow:hidden;width:180px;margin-left:auto}
-.prog i{display:block;height:100%;background:var(--stamp)}
-.energy{display:flex;gap:4px;align-items:center}
-.energy i{width:12px;height:12px;border-radius:50%;border:1.5px solid var(--accent);display:inline-block}
-.energy i.on{background:var(--accent)}
-.actions{display:flex;gap:8px;flex-wrap:wrap;padding:12px 18px;border-top:1px solid var(--rule)}
-.act{border:1px solid var(--rule);background:var(--soft);padding:7px 12px;border-radius:4px;text-align:left;display:grid;line-height:1.35}
-.act b{font-size:14px} .act span{font-size:11.5px;color:var(--muted)}
-.act:not(:disabled):hover{border-color:var(--accent)}
-
-.cols{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:18px;align-items:start}
-.panel{display:flex;flex-direction:column}
-.panel>h2{font-family:var(--f-display);font-size:20px;font-weight:400;padding:12px 16px;border-bottom:2px solid var(--ink);display:flex;justify-content:space-between;align-items:baseline;gap:8px}
-.panel>h2 small{font-family:var(--f-body);font-size:12px;color:var(--muted)}
-.job{padding:12px 16px;border-bottom:1px solid var(--rule);display:grid;gap:6px}
+/* 双栏 */
+.cols{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:16px;align-items:start}
+.stack{display:flex;flex-direction:column;gap:16px;min-width:0}
+.panel{overflow:hidden}
+.ph{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:11px 16px;border-bottom:2.5px solid var(--edge)}
+.ph h2{font-family:var(--f-display);font-weight:400;font-size:21px;letter-spacing:.03em}
+.ph small{font-size:12px;color:var(--muted)}
+.ph.orange{background:var(--orange);color:var(--on)} .ph.orange small{color:var(--on)}
+.ph.mint{background:var(--mint);color:var(--on)} .ph.mint small{color:var(--on)}
+.job{padding:12px 16px;border-bottom:2px dashed color-mix(in srgb,var(--edge) 35%,transparent);display:grid;gap:7px;animation:rise .35s ease both}
 .job:last-child{border-bottom:0}
-.job .hd{display:flex;justify-content:space-between;gap:10px;align-items:baseline}
-.job .co{font-weight:700}
-.job .role{color:var(--muted);font-size:14px}
-.job .sal{font-family:var(--f-mono);font-weight:700;white-space:nowrap}
-.job .tags{display:flex;gap:5px;flex-wrap:wrap;font-size:12px}
+@keyframes rise{from{opacity:.0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.job .hd{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.job .co{font-weight:700;font-size:15.5px}
+.job .role{color:var(--muted);font-size:13.5px}
+.sal{font-family:var(--f-num);font-weight:800;font-size:19px;white-space:nowrap}
+.sal small{font-family:var(--f-body);font-size:11px;font-weight:400;color:var(--muted)}
+.tags{display:flex;gap:5px;flex-wrap:wrap}
 .job .ft{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
 .job .ft .muted{font-size:12px}
-.job .btns{display:flex;gap:6px}
-.empty{padding:24px 16px;color:var(--muted);font-size:14px}
-
-.appi{padding:10px 16px;border-bottom:1px solid var(--rule);display:grid;gap:5px;position:relative}
+.odds{font-weight:700}
+.odds.g{color:var(--mint)} .odds.b{color:var(--blue)} .odds.a{color:var(--yellow)} .odds.r{color:var(--red)}
+.btns{display:flex;gap:6px;flex-wrap:wrap}
+.empty{padding:22px 16px;color:var(--muted);font-size:14px}
+.appi{padding:10px 16px;border-bottom:2px dashed color-mix(in srgb,var(--edge) 35%,transparent);display:grid;gap:5px}
 .appi:last-child{border-bottom:0}
-.appi .hd{display:flex;justify-content:space-between;gap:8px;align-items:center}
+.appi .hd{display:flex;justify-content:space-between;align-items:center;gap:8px}
 .appi .nm{font-weight:500;font-size:14px;min-width:0}
 .appi .nm small{color:var(--muted);font-weight:400}
+.appi .stamp{font-size:15px}
+.appi.dead{opacity:.6}
 .pipe{display:flex;flex-wrap:wrap;gap:3px;font-size:11.5px}
-.pipe span{padding:0 6px;border-radius:2px;background:var(--soft);color:var(--muted);border:1px solid transparent}
-.pipe span.done{color:var(--ok);border-color:var(--ok);background:transparent}
-.pipe span.cur{color:var(--accent);border-color:var(--accent);font-weight:700;background:transparent}
-.pipe span.fail{color:var(--stamp);border-color:var(--stamp);background:transparent;text-decoration:line-through}
-.appi .note{font-size:12px;color:var(--muted)}
-.appi.dead{opacity:.62}
-.appi .stamp{font-size:16px}
-.fold{padding:8px 16px;font-size:13px;border:0;background:none;color:var(--accent);text-align:left}
+.pipe span{padding:0 7px;border-radius:99px;border:1.5px solid color-mix(in srgb,var(--edge) 30%,transparent);color:var(--muted)}
+.pipe span.done{background:var(--mint);color:var(--on);border-color:var(--edge)}
+.pipe span.cur{background:var(--yellow);color:var(--on);border-color:var(--edge);font-weight:700}
+.pipe span.fail{background:var(--red);color:#fff;border-color:var(--edge);text-decoration:line-through}
+.note{font-size:12px;color:var(--muted)}
+.fold{padding:9px 16px;font-size:13px;border:0;background:none;color:var(--blue);text-align:left;font-weight:500}
+.offer{padding:12px 16px;border-bottom:2px dashed color-mix(in srgb,var(--edge) 35%,transparent);display:grid;gap:6px}
+.offer:last-child{border-bottom:0}
+.offer .hd{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
+.wlb{display:inline-flex;gap:3px;vertical-align:middle}
+.wlb i{width:9px;height:9px;border-radius:2px;border:1.5px solid var(--edge);background:var(--soft)}
+.wlb i.on{background:var(--red)}
+.log{padding:10px 16px;display:grid;gap:4px;font-size:13px;max-height:220px;overflow:auto}
+.log div{display:grid;grid-template-columns:40px 1fr;gap:8px}
+.log .w{font-family:var(--f-num);color:var(--muted)}
+.t-good{color:var(--mint)} .t-bad{color:var(--red)} .t-warn{color:var(--yellow)}
 
-.log{padding:12px 16px;display:grid;gap:4px;font-size:13px;max-height:220px;overflow:auto}
-.log div{display:grid;grid-template-columns:52px 1fr;gap:8px}
-.log .w{font-family:var(--f-mono);color:var(--muted)}
-.good{color:var(--ok)} .bad{color:var(--stamp)} .warn{color:var(--warn)}
+.dock{position:fixed;left:0;right:0;bottom:0;z-index:5;background:var(--card);border-top:2.5px solid var(--edge);padding-top:10px;padding-bottom:calc(10px + env(safe-area-inset-bottom,0px));padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.dock .in{max-width:1100px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.dock .btn{font-size:16px;padding:11px 24px;white-space:nowrap;flex:none}
+.dock .info{font-size:13px;color:var(--muted);display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 
-.dock{position:fixed;left:0;right:0;bottom:0;background:var(--sheet);border-top:2px solid var(--ink);padding-top:10px;padding-bottom:calc(10px + env(safe-area-inset-bottom,0px));padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));z-index:5}
-.dock .in{max-width:1080px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;gap:12px}
-.dock .btn{padding:10px 22px;font-size:16px}
+/* 登记表 */
+.form{max-width:660px;width:100%;margin:0 auto;position:relative;overflow:hidden}
+.form-head{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 18px;background:var(--blue);color:#fff;border-bottom:2.5px solid var(--edge)}
+.form-title{font-family:var(--f-display);font-size:24px;letter-spacing:.08em}
+.frow{display:grid;grid-template-columns:96px 1fr;border-bottom:2px solid color-mix(in srgb,var(--edge) 25%,transparent)}
+.frow label{padding:12px 14px;background:var(--soft);font-size:13px;color:var(--muted);letter-spacing:.2em;display:flex;align-items:center;border-right:2px solid color-mix(in srgb,var(--edge) 25%,transparent)}
+.frow .cell{padding:10px 14px;font-size:20px;font-weight:700;min-height:54px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;min-width:0}
+.frow .cell .sub{font-size:13px;font-weight:400;color:var(--muted)}
+.form .seal{position:absolute;right:18px;top:64px;font-size:26px}
+.form-stats{padding:14px 18px;border-bottom:2px solid color-mix(in srgb,var(--edge) 25%,transparent)}
+.form-foot{padding:16px 18px;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.intro{max-width:660px;margin:0 auto;width:100%;display:grid;gap:10px}
+.steps4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.steps4 div{padding:10px;border:2.5px solid var(--edge);border-radius:14px;background:var(--card);box-shadow:3px 3px 0 var(--sh);display:grid;gap:2px}
+.steps4 b{font-family:var(--f-display);font-weight:400;font-size:16px}
+.steps4 span{font-size:12px;color:var(--muted)}
+.steps4 em{font-style:normal;font-family:var(--f-num);font-weight:800;color:var(--orange)}
+
+/* 成就 */
+.badges{display:flex;flex-wrap:wrap;gap:10px}
+.badge{display:grid;justify-items:center;gap:3px;width:76px;text-align:center}
+.badge .seal2{width:54px;height:54px;border-radius:50%;border:2.5px solid var(--edge);display:grid;place-items:center;font-family:var(--f-stamp);font-size:27px;color:#fff;background:var(--c);box-shadow:2px 2px 0 var(--sh);position:relative}
+.badge .seal2::after{content:"";position:absolute;inset:4px;border-radius:50%;border:1.5px dashed rgba(255,255,255,.65)}
+.badge span{font-size:11.5px;line-height:1.3}
+.badge.locked .seal2{background:var(--soft);color:var(--muted);filter:grayscale(1)}
+.badge.locked span{color:var(--muted)}
+.toasts{position:fixed;right:max(16px,env(safe-area-inset-right,0px));top:calc(16px + env(safe-area-inset-top,0px));z-index:40;display:grid;gap:8px;pointer-events:none}
+.toast{display:flex;align-items:center;gap:10px;padding:8px 14px 8px 8px;background:var(--card);border:2.5px solid var(--edge);border-radius:14px;box-shadow:3px 3px 0 var(--sh);animation:toastIn .45s cubic-bezier(.2,1.4,.4,1) both;max-width:300px}
+.toast .seal2{width:40px;height:40px;font-size:20px;border-radius:50%;border:2px solid var(--edge);display:grid;place-items:center;font-family:var(--f-stamp);color:#fff;background:var(--c);flex:none}
+.toast small{display:block;font-size:11px;color:var(--muted)}
+.toast.out{animation:toastOut .3s ease forwards}
+@keyframes toastIn{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:none}}
+@keyframes toastOut{to{opacity:0;transform:translateX(40px)}}
 
 /* 弹窗 */
-.overlay{position:fixed;inset:0;background:color-mix(in srgb,var(--ink) 45%,transparent);display:flex;align-items:center;justify-content:center;z-index:20;padding:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
-.dialog{width:100%;max-width:560px;max-height:100%;overflow:auto;box-shadow:0 18px 50px rgba(0,0,0,.25)}
-.dialog .dh{padding:14px 18px;border-bottom:2px solid var(--ink);display:flex;justify-content:space-between;align-items:center;gap:10px}
-.dialog .dh h3{font-family:var(--f-display);font-weight:400;font-size:20px}
-.dialog .db{padding:16px 18px;display:grid;gap:12px}
-.q{font-size:17px;font-weight:500}
-.q .who2{display:block;font-size:12px;color:var(--muted);font-weight:400;letter-spacing:.1em;margin-bottom:4px}
+.overlay{position:fixed;inset:0;z-index:20;background:color-mix(in srgb,#0b0d24 55%,transparent);display:flex;align-items:center;justify-content:center;padding:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));animation:fade .2s ease}
+@keyframes fade{from{opacity:0}}
+.dialog{width:100%;max-width:560px;max-height:100%;overflow:auto;animation:pop .3s cubic-bezier(.2,1.3,.4,1)}
+@keyframes pop{from{transform:scale(.92);opacity:0}}
+.dh{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 18px;border-bottom:2.5px solid var(--edge);background:var(--soft)}
+.dh .tag{font-size:12px;font-weight:700;letter-spacing:.12em;color:var(--muted)}
+.dh h3{font-family:var(--f-display);font-weight:400;font-size:21px}
+.db{padding:16px 18px;display:grid;gap:12px}
+.speaker{display:grid;grid-template-columns:56px 1fr;gap:12px;align-items:start}
+.bubble{position:relative;background:var(--soft);border:2px solid var(--edge);border-radius:14px;padding:10px 12px;font-size:16px;font-weight:500}
+.bubble small{display:block;font-size:11.5px;color:var(--muted);font-weight:400;letter-spacing:.1em;margin-bottom:2px}
 .opts{display:grid;gap:8px}
-.opt{border:1px solid var(--rule);background:var(--soft);text-align:left;padding:10px 12px;border-radius:4px;font-size:14.5px}
-.opt:not(:disabled):hover{border-color:var(--accent)}
-.opt.picked{border-color:var(--accent);background:transparent;font-weight:500}
-.fb{padding:10px 12px;border-left:3px solid var(--muted);background:var(--soft);font-size:14px}
-.fb.good{border-color:var(--ok)} .fb.bad{border-color:var(--stamp)}
+.opt{border:2.5px solid var(--edge);border-radius:12px;background:var(--card);box-shadow:3px 3px 0 var(--sh);text-align:left;padding:10px 13px;font-size:14.5px;transition:transform .08s,box-shadow .08s,background .15s}
+.opt:not(:disabled):hover{background:var(--yellow);color:var(--on);transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--sh)}
+.opt:disabled{opacity:.5}
+.opt.picked{background:var(--yellow);color:var(--on);opacity:1}
+.opt .req{display:block;font-size:11.5px;color:var(--red);font-weight:500}
+.fb{border:2px solid var(--edge);border-radius:12px;padding:10px 12px;font-size:14px;background:var(--soft);animation:rise .3s ease both}
+.fb.good{background:color-mix(in srgb,var(--mint) 22%,var(--card))}
+.fb.bad{background:color-mix(in srgb,var(--red) 18%,var(--card))}
+.fxs{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
+.fxc{font-size:12px;font-weight:700;padding:0 8px;border-radius:99px;border:1.5px solid var(--edge)}
+.fxc.up{background:var(--mint);color:var(--on)} .fxc.down{background:var(--red);color:#fff}
+.df{padding:12px 18px;border-top:2px solid color-mix(in srgb,var(--edge) 25%,transparent);display:flex;justify-content:flex-end;gap:8px}
 .rep{display:grid;gap:6px;font-size:14px}
-.rep div{padding-left:14px;position:relative}
-.rep div::before{content:"";position:absolute;left:0;top:.65em;width:6px;height:6px;border-radius:50%;background:var(--muted)}
-.rep .good::before{background:var(--ok)} .rep .bad::before{background:var(--stamp)} .rep .warn::before{background:var(--warn)}
-.evt{padding:10px 12px;border:1px dashed var(--rule);font-size:14px}
-.evt b{display:block;font-size:12px;color:var(--muted);letter-spacing:.15em;font-weight:500}
-.df{padding:12px 18px;border-top:1px solid var(--rule);display:flex;justify-content:flex-end;gap:8px}
+.rep>div{display:flex;gap:8px;align-items:flex-start}
+.rep>div::before{content:"";flex:none;width:10px;height:10px;margin-top:6px;border-radius:50%;border:1.5px solid var(--edge);background:var(--muted)}
+.rep>.good::before{background:var(--mint)} .rep>.bad::before{background:var(--red)} .rep>.warn::before{background:var(--yellow)}
+.rep .fxs{margin-top:4px}
+.evt{border:2px dashed var(--edge);border-radius:12px;padding:10px 12px;font-size:14px}
+.evt b{display:block;font-size:11.5px;letter-spacing:.15em;color:var(--muted)}
+.chapter-card{text-align:center;padding:30px 22px 24px;display:grid;gap:10px;justify-items:center}
+.chapter-card .no{font-family:var(--f-num);font-weight:800;font-size:14px;letter-spacing:.3em;color:var(--muted)}
+.chapter-card h2{font-family:var(--f-display);font-weight:400;font-size:clamp(32px,7vw,44px);line-height:1.1}
+.chapter-card p{margin:0;color:var(--muted);max-width:30em}
+.chapter-card .big{font-size:64px;line-height:1}
 
-/* 结局 */
-.ending{max-width:640px;width:100%;margin:0 auto;padding:22px 20px;display:grid;gap:14px;position:relative}
-.ending .stamp{font-size:34px;justify-self:start}
-.ending h1{font-family:var(--f-display);font-weight:400;font-size:clamp(26px,5vw,34px)}
-.tally{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--rule)}
-.tally div{padding:8px 10px;border-right:1px solid var(--rule);border-bottom:1px solid var(--rule);display:grid}
-.tally div:nth-child(3n){border-right:0}
-.tally div:nth-last-child(-n+3){border-bottom:0}
-.tally span{font-size:12px;color:var(--muted)} .tally b{font-family:var(--f-mono);font-size:20px}
-.share{background:var(--soft);border:1px solid var(--rule);padding:12px;font-size:14px;user-select:all;white-space:pre-wrap}
-.offerlist{display:grid;gap:8px}
-.offerrow{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--rule);flex-wrap:wrap}
-.row-btns{display:flex;gap:8px;flex-wrap:wrap}
+/* 终局 */
+.destiny{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
+.dest{border:2.5px solid var(--edge);border-radius:16px;background:var(--card);box-shadow:4px 4px 0 var(--sh);padding:14px;text-align:left;display:grid;gap:6px;transition:transform .08s,box-shadow .08s}
+.dest:not(:disabled):hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--sh)}
+.dest:disabled{opacity:.55}
+.dest .k{font-size:11.5px;letter-spacing:.15em;font-weight:700;color:var(--muted)}
+.dest b{font-size:17px}
+.dest .s{font-size:13px;color:var(--muted)}
+.dest .req{font-size:12px;color:var(--red);font-weight:500}
+.dest.offerd{background:color-mix(in srgb,var(--mint) 14%,var(--card))}
+.result{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;align-items:start}
+.rcard{overflow:hidden;position:relative}
+.rcard .top{background:var(--orange);color:var(--on);padding:18px 20px 16px;border-bottom:2.5px solid var(--edge);display:grid;gap:4px}
+.rcard .top .k{font-size:12px;letter-spacing:.25em;font-weight:700}
+.rcard .top h1{font-family:var(--f-display);font-weight:400;font-size:clamp(28px,5.5vw,38px);line-height:1.15}
+.rcard .bd{padding:16px 20px;display:grid;gap:14px}
+.rcard .ending{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.rcard .ending .stamp{font-size:26px}
+.rcard .desc{font-size:15px}
+.tri{display:grid;grid-template-columns:repeat(3,1fr);border:2.5px solid var(--edge);border-radius:14px;overflow:hidden}
+.tri div{padding:8px 10px;display:grid;justify-items:center;border-right:2px solid var(--edge)}
+.tri div:last-child{border-right:0}
+.tri b{font-family:var(--f-num);font-weight:800;font-size:26px;line-height:1.1}
+.tri span{font-size:12px;color:var(--muted)}
+.rattrs{display:grid;grid-template-columns:1fr 1fr;gap:8px 14px}
+.side{display:grid;gap:12px}
+.preview{display:grid;gap:10px;justify-items:center;text-align:center}
+.preview img{border:2.5px solid var(--edge);border-radius:12px;max-height:70vh}
+#fx{position:fixed;inset:0;pointer-events:none;z-index:30;width:100%;height:100%}
 
-@media (max-width:760px){
-  .cols{grid-template-columns:1fr}
-  .top{grid-template-columns:1fr}
-  .week{text-align:left}.prog{margin-left:0}
-  .frow{grid-template-columns:72px 1fr}
+@media (max-width:860px){
+  .acts{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .cols,.result{grid-template-columns:1fr}
+}
+@media (max-width:560px){
+  .attrs{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .chapters div span{display:none}
+  .chapters div{justify-content:center}
+  .acts{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .frow{grid-template-columns:70px 1fr}
   .frow label{letter-spacing:.05em}
   .frow .cell{font-size:17px}
-  .form .seal{top:auto;bottom:70px;right:12px;font-size:20px}
-  .tally{grid-template-columns:repeat(2,1fr)}
-  .tally div:nth-child(3n){border-right:1px solid var(--rule)}
-  .tally div:nth-child(2n){border-right:0}
-  .tally div:nth-last-child(-n+3){border-bottom:1px solid var(--rule)}
-  .tally div:nth-last-child(-n+2){border-bottom:0}
+  .form .seal{top:auto;bottom:74px;right:12px;font-size:20px}
+  .steps4{grid-template-columns:repeat(2,1fr)}
+  .dock .btn{padding:10px 16px}
+  .tri b{font-size:22px}
 }
-@media (prefers-reduced-motion:reduce){.stamp.in{animation:none}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
 <div class="wrap" id="app"></div>
-<div class="overlay" id="ov" hidden><div class="dialog sheet" role="dialog" aria-modal="true" id="dlg"></div></div>
+<div id="dock"></div>
+<div class="overlay" id="ov" hidden><div class="dialog card" role="dialog" aria-modal="true" id="dlg"></div></div>
+<div class="toasts" id="toasts" aria-live="polite"></div>
+<canvas id="fx" hidden></canvas>
 
 <script>
-/* ========== 工具 ========== */
+/* ================= 工具 ================= */
 const $=s=>document.querySelector(s);
 const R=Math.random, ri=(a,b)=>a+Math.floor(R()*(b-a+1)), pick=a=>a[Math.floor(R()*a.length)];
 const clamp=(x,a,b)=>Math.max(a,Math.min(b,x)), sig=x=>1/(1+Math.exp(-x));
-const wpick=a=>{let t=a.reduce((s,x)=>s+x.w,0),r=R()*t;for(const x of a){if((r-=x.w)<0)return x}return a[a.length-1]};
+const wpick=a=>{let t=a.reduce((s,x)=>s+(x.w||1),0),r=R()*t;for(const x of a){if((r-=(x.w||1))<0)return x}return a[a.length-1]};
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(R()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const store={get(k){try{return JSON.parse(localStorage.getItem(k))}catch(_){return null}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(_){}},del(k){try{localStorage.removeItem(k)}catch(_){}}};
+const SAVE_KEY='qzqsj_save_v2', ACH_KEY='qzqsj_ach_v1';
 const TOTAL_WEEKS=12, GOV_DEADLINE=7;
+const reduceMotion=()=>{try{return matchMedia('(prefers-reduced-motion: reduce)').matches}catch(_){return false}};
 
-/* ========== 身份数据 ========== */
+/* ================= 身份数据 ================= */
 const DEGS=[{k:'本科',w:50,r:0},{k:'硕士',w:38,r:1},{k:'博士',w:12,r:2}];
+const DEGNAME=['本科','硕士','博士'];
 const TIERS=[
  {k:'顶尖名校',halo:95,w:6,names:['清华大学','北京大学','复旦大学','上海交通大学','浙江大学','中国科学技术大学','南京大学']},
  {k:'985',halo:82,w:14,names:['武汉大学','华中科技大学','中山大学','哈尔滨工业大学','西安交通大学','四川大学','同济大学','南开大学','厦门大学','东南大学','山东大学','吉林大学']},
@@ -222,22 +334,26 @@ const MAJORS=[
 const PIT=new Set(['bio','chem','mat','civil']);
 const MAJ_LABEL={cs:'计算机',ee:'电子电气',fin:'金融财会',math:'数学统计',law:'法学',bio:'生物',chem:'化学化工',mat:'材料',civil:'土木',mech:'机械',lit:'文学传媒',psy:'心理',biz:'经管',any:'不限专业'};
 const TRAITS=[
- {k:'社牛',d:'面试表达 +15',a:s=>{s.speak+=15}},
- {k:'卷王',d:'专业能力 +12，心态 −10',a:s=>{s.skill+=12;s.san-=10}},
- {k:'佛系',d:'心态 +20',a:s=>{s.san+=20}},
+ {k:'社牛',d:'求职信心 +15',a:s=>{s.a.conf+=15}},
+ {k:'卷王',d:'竞争力 +12，心理能量 −10',a:s=>{s.a.comp+=12;s.a.mind-=10}},
+ {k:'佛系',d:'心理能量 +20',a:s=>{s.a.mind+=20}},
  {k:'表姐在大厂当HR',d:'开局送 2 个内推码',a:s=>{s.refs+=2}},
- {k:'绩点年级第一',d:'专业能力 +8，简历分 +4',a:s=>{s.skill+=8;s.rb+=4}},
- {k:'实习达人',d:'实习经历 +20',a:s=>{s.intern+=20}},
+ {k:'绩点年级第一',d:'竞争力 +8，简历更好看',a:s=>{s.a.comp+=8;s.rb+=4}},
+ {k:'实习达人',d:'竞争力 +12',a:s=>{s.a.comp+=12}},
  {k:'导师放养',d:'每周精力 +1',a:s=>{s.maxE+=1},deg:[1,2]},
  {k:'课少',d:'每周精力 +1',a:s=>{s.maxE+=1},deg:[0]},
- {k:'玻璃心',d:'心态 −15，面试表达 +8',a:s=>{s.san-=15;s.speak+=8}},
+ {k:'玻璃心',d:'心理能量 −15，竞争力 +8',a:s=>{s.a.mind-=15;s.a.comp+=8}},
  {k:'锦鲤体质',d:'所有判定概率 +5%',a:s=>{s.luck=.05}},
- {k:'社恐',d:'面试表达 −10，专业能力 +10',a:s=>{s.speak-=10;s.skill+=10}},
- {k:'有一篇一作论文',d:'专业能力 +10，研究类岗位简历分 +8',a:s=>{s.skill+=10;s.paper=1},deg:[1,2]}
+ {k:'社恐',d:'求职信心 −12，竞争力 +10',a:s=>{s.a.conf-=12;s.a.comp+=10}},
+ {k:'有一篇一作论文',d:'竞争力 +10，研究类岗位加分',a:s=>{s.a.comp+=10;s.paper=1},deg:[1,2]},
+ {k:'家里有矿',d:'钱包 +35，信心 +5',a:s=>{s.a.money+=35;s.a.conf+=5}},
+ {k:'月光族',d:'钱包 −25，信心 +8',a:s=>{s.a.money-=25;s.a.conf+=8}}
 ];
 
-/* ========== 岗位数据 ========== */
+/* ================= 岗位数据 ================= */
 const CAT={bigtech:'互联网/科技',foreign:'外企',soe:'央国企',bank:'银行',finance:'金融',gov:'考公',edu:'教师',academic:'科研',startup:'初创',consult:'咨询',other:'其他'};
+const WLB={bigtech:4,foreign:2,soe:2,bank:3,finance:5,gov:1,edu:2,academic:3,startup:5,consult:5,other:3};
+const FIXED_PAY=new Set(['gov','soe','edu','academic']);
 const J=(c,co,r,m,d,bar,s,k,x={})=>({c,co,r,m,d,bar,s,k,...x});
 const JOBS=[
  J('bigtech','某头部短视频大厂','后端开发工程师',['cs','ee','math'],0,58,[32,48],'tech'),
@@ -298,17 +414,17 @@ const STG={
 };
 const INTERACTIVE=new Set(['interview','group','hr','struct','lecture','boss','case']);
 
-/* ========== 面试题库 ========== */
-// [选项, 分数(或[min,max]随机), 面试官反应, 薪资倍率]
+/* ================= 面试题库 =================
+   [选项文字, 表现分(或[min,max]随机), 对方反应, 薪资倍率, 解锁条件] */
 const Q={
 general:[
- ['请做一个一分钟的自我介绍。',[['挑两段和岗位最相关的经历，讲清楚做了什么、结果怎样',12,'面试官在纸上记了几笔。'],['从"我出生在一个普通而温暖的家庭"讲起',-10,'面试官的笔停了。'],['把简历从头到尾念一遍',-2,'"嗯，这些简历上都有。"'],['"简历上都写了，您直接问吧"',-14,'空气突然安静。']]],
+ ['请做一个一分钟的自我介绍。',[['挑两段和岗位最相关的经历，讲清楚做了什么、结果怎样',12,'面试官在纸上记了几笔。'],['从"我出生在一个普通而温暖的家庭"讲起',-10,'面试官的笔停了。'],['把简历从头到尾念一遍',-2,'"嗯，这些简历上都有。"'],['用一个抓人的小故事开场，三十秒内让面试官笑出来',15,'面试官笑了，然后坐直了身子。',1,{conf:65}]]],
  ['你最大的缺点是什么？',[['"我太追求完美了"',-6,'这是面试官今天第五次听到这个答案。'],['说一个真实但不致命的缺点，再讲你怎么改',11,'面试官点点头："挺实在的。"'],['"我没有缺点"',-15,'面试官笑了，但不是那种笑。'],['"早上起不来"',-3,'面试官笑了一下，没往下记。']]],
  ['为什么想来我们公司？',[['说出公司最近的一个业务动作，以及它和你经历的关联',12,'面试官："看得出来你做了功课。"'],['"因为离我家近"',-5,'面试官："……还有呢？"'],['"因为贵司平台大、发展好"',0,'面试官点点头，像是听了一百遍。'],['"说实话，你们是我投的第 47 家"',-12,'面试官："谢谢你的诚实。"']]],
- ['你和同事意见冲突时怎么处理？',[['先对齐目标，用数据说话，必要时请上级拍板',11,'面试官："嗯，成熟。"'],['"我一般都听别人的"',-4,'面试官在"主动性"那栏犹豫了一下。'],['"我会坚持，因为我通常是对的"',-10,'面试官挑了挑眉。']]],
- ['你未来三到五年的规划是什么？',[['先把这个岗位做扎实，再往一个细分方向深挖',10,'面试官："目标挺清楚。"'],['"想再读个博"',-10,'面试官在"稳定性"后面画了个问号。'],['"坐到您的位置"',[-12,12],'面试官的表情很难读。'],['"还没想好"',-6,'面试官："那可以想一想。"']]],
+ ['我们为什么要录用你，而不是其他候选人？',[['列出岗位最需要的三件事，每件配一个你的证据',13,'面试官："很有说服力。"',1,{conf:50}],['"因为我很努力"',-4,'"大家都很努力。"'],['"其实我也不确定"',-12,'面试官替你感到尴尬。'],['反问"您觉得这个岗位最缺什么样的人？"再对号入座',[-4,14],'这招有点险。']]],
+ ['你未来五年的规划是什么？',[['先把这个岗位做扎实，再往一个细分方向深挖',10,'面试官："目标挺清楚。"'],['"想再读个博"',-10,'面试官在"稳定性"后面画了个问号。'],['"坐到您的位置"',[-12,12],'面试官的表情很难读。'],['"还没想好"',-6,'面试官："那可以想一想。"']]],
  ['说说你做过最有挑战的一件事。',[['讲清背景、难点、你的具体动作和量化结果',12,'面试官追问了两个细节，你都接住了。'],['讲期末考前通宵复习',-6,'面试官："嗯……还有别的吗？"'],['讲小组作业队友全跑了，你一个人做完',3,'面试官同情地看了你一眼。']]],
- ['你能接受加班吗？',[['"项目紧急时可以，平时会尽量提高效率"',9,'标准答案，面试官很满意。'],['"能！我可以 007！"',-2,'面试官有点担心你的身体。'],['"不能，我要准点下班"',-9,'面试官："好的，了解。"']]]
+ ['你能接受加班吗？',[['"项目紧急时可以，平时会尽量提高效率"',9,'标准答案，面试官很满意。'],['"能！我可以 007！"',-2,'面试官有点担心你的身体。'],['"不能，我要准点下班"',-9,'面试官："好的，了解。"'],['"加班可以，但我更想知道团队怎么避免无效加班"',8,'面试官愣了一下："好问题。"',1,{conf:55}]]]
 ],
 tech:[
  ['手撕代码：反转一个链表。',[['先讲思路和边界，边写边说，写完自己跑一遍用例',14,'面试官："可以，下一题。"'],['闷头写，一句话不说',3,'写对了，但面试官不知道你在想什么。'],['"我平时都是让 AI 写的"',-12,'面试官合上了电脑。'],['"能换一道吗？"',-7,'换了一道更难的。']]],
@@ -326,7 +442,7 @@ research:[
  ['说一个你最熟练的技术平台。',[['讲清原理、你优化过的步骤和踩过的坑',11,'面试官："这个坑我们也踩过。"'],['列出简历上的二十项技术',-3,'面试官："挑一个讲深一点。"']]]
 ],
 group:[
- ['无领导小组：沙漠求生，给 15 样物品排序。你打算？',[['主动当计时员，提醒大家控制节奏',8,'面试官在你名字旁打了个勾。'],['一开场就抢 Leader，强行总结',[-10,14],'有人跟着你，也有人翻了白眼。'],['全程微笑点头，没说几句',-12,'面试官对你没有印象。'],['提出一个大家都忽略的关键约束，带着讨论转向',13,'全组都停下来听你说。']]],
+ ['无领导小组：沙漠求生，给 15 样物品排序。你打算？',[['主动当计时员，提醒大家控制节奏',8,'面试官在你名字旁打了个勾。'],['一开场就抢 Leader，强行总结',[-10,14],'有人跟着你，也有人翻了白眼。'],['全程微笑点头，没说几句',-12,'面试官对你没有印象。'],['提出一个大家都忽略的关键约束，带着讨论转向',13,'全组都停下来听你说。',1,{conf:55}]]],
  ['讨论陷入僵局，两派吵得不可开交。你会？',[['把观点归成两类，提议先投票再细化',12,'讨论重新推进了。'],['坚持自己的方案，声音越来越大',-9,'面试官皱起了眉头。'],['把话题转到预算问题',2,'有点用，但不多。']]],
  ['最后需要一个人做总结陈述，大家都看向你。',[['接下来，按"结论—理由—风险"讲完，控制在两分钟',12,'面试官点了点头。'],['推给刚才最安静的同学',4,'面试官记下了你的团队意识。'],['接下来，但讲了五分钟',-6,'面试官打断了你。']]],
  ['组里有个人一直打断别人。',[['礼貌地说："我们先听他讲完。"',10,'面试官抬头看了你一眼。'],['你也开始打断他',-10,'场面一度混乱。'],['沉默',-3,'面试官没注意到你。']]]
@@ -338,10 +454,10 @@ struct:[
  ['你为什么想当公务员？',[['讲一段让你想做基层服务的具体经历',11,'考官微微点头。'],['"稳定"',-6,'诚实，但扣分。'],['"我妈让的"',-10,'有个考官差点笑出来。']]]
 ],
 hr:[
- ['你的期望薪资是多少？',[['按岗位常见区间报，强调更看重成长',8,'HR："在我们范围内。"',1],['报一个比市场高 50% 的数',-8,'HR："这个可能有点难。"',1.15],['"多少都行"',2,'HR很满意，但你的薪资也被压了一档。',.85]]],
- ['你手上还有其他 offer 吗？',[['"有在推进的，但贵司是第一志愿"',10,'HR："好的，我们会尽快。"'],['"没有，求求了"',-6,'HR的语气变得很淡定。'],['"有三个 SSP"（其实没有）',[-15,10],'HR："那你为什么还来面我们？"']]],
- ['什么时候能来实习或入职？',[['"下个月就可以"',8,'HR在系统里勾了一下。'],['"要看导师放不放人"',-6,'HR："那你先问问？"'],['"毕业以后吧"',-3,'HR："好的。"']]],
- ['能接受外派或轮岗吗？',[['"能，年轻的时候多去一线锻炼"',9,'HR："很好。"'],['"只想留在一线城市"',-4,'HR："名额要看分配。"'],['"看情况"',-2,'HR："嗯。"']]]
+ ['你手上还有其他 offer 吗？',[['"有在推进的，但贵司是第一志愿"',10,'HR："好的，我们会尽快。"'],['"没有，求求了"',-6,'HR 的语气变得很淡定。'],['"有三个 SSP"（其实没有）',[-15,10],'HR："那你为什么还来面我们？"'],['如实说有一个 offer，并报出具体数字',12,'HR："我去跟老板申请一下。"',1.05,{offer:1}]]],
+ ['什么时候能来实习或入职？',[['"下个月就可以"',8,'HR 在系统里勾了一下。'],['"要看导师放不放人"',-6,'HR："那你先问问？"'],['"毕业以后吧"',-3,'HR："好的。"']]],
+ ['能接受外派或轮岗吗？',[['"能，年轻的时候多去一线锻炼"',9,'HR："很好。"'],['"只想留在一线城市"',-4,'HR："名额要看分配。"'],['"看情况"',-2,'HR："嗯。"']]],
+ ['你觉得自己能为团队带来什么？',[['讲一个你在实习里让团队省时间的具体例子',10,'HR 在评价栏写了一行字。'],['"快乐"',[-6,8],'HR 笑了。是加分还是减分，不好说。'],['"我会努力学习"',0,'HR："好的。"']]]
 ],
 boss:[
  ['我们暂时没有五险一金，但有期权。你怎么看？',[['"可以，但希望期权条款写进合同"',8,'老板："懂行。"'],['"我相信梦想！"',12,'老板眼睛亮了。'],['"那我再考虑考虑"',-10,'老板的笑容消失了。']]],
@@ -359,30 +475,136 @@ lecture:[
  ['学生上课一直玩手机，你怎么处理？',[['调整讲法，加入互动，课后单独聊',11,'评委："有经验。"'],['没收手机',-4,'评委："现在可不能这样。"'],['不管',-7,'评委："那课堂效果呢？"']]]
 ]
 };
-
-/* ========== 事件 ========== */
-const EVENTS=[
- {t:'学长在群里甩出一个内推码，你手快抢到了。',f:s=>{s.st.refs++},tone:'good'},
- {t:'室友拿到了大厂 SSP，请全宿舍喝奶茶。你喝得很苦。心态 −8。',f:s=>{s.st.san-=8},tone:'bad'},
- {t:'妈妈打来电话："要不还是考公吧？"心态 −5。',f:s=>{s.st.san-=5},tone:'bad'},
- {t:'导师："实验做完了吗就天天出去面试？"下周精力 −2。',f:s=>{s.st.pen+=2},tone:'bad',c:s=>s.id.deg.r>0},
- {t:'刷到一篇面经，和你在面的公司高度相关。下次面试表现 +8。',f:s=>{s.st.buff=8},tone:'good'},
- {t:'某大厂宣布"组织架构调整"，你的一个流程 HC 冻结了。心态 −5。',f:s=>{const a=pick(s.apps.filter(a=>a.st==='active'&&a.job.c==='bigtech'&&a.si>0));a.st='frozen';a.note='HC 冻结，流程终止';s.st.san-=5},tone:'bad',c:s=>s.apps.some(a=>a.st==='active'&&a.job.c==='bigtech'&&a.si>0)},
- {t:'发烧了两天。下周精力 −2。',f:s=>{s.st.pen+=2},tone:'bad'},
- {t:'宣讲会抽奖抽中一个保温杯。心态 +6。',f:s=>{s.st.san+=6},tone:'good'},
- {t:'被拉进"秋招互助群"，群里天天有人报喜。专业能力 +3，心态 −6。',f:s=>{s.st.skill+=3;s.st.san-=6},tone:'warn'},
- {t:'换了一版一页纸简历模板，HR 看得更顺眼了。简历分 +5。',f:s=>{s.st.rb+=5},tone:'good'},
- {t:'在操场跑了五公里，突然觉得人生也没那么难。心态 +10。',f:s=>{s.st.san+=10},tone:'good'},
- {t:'刷到"35 岁被裁"的帖子，焦虑了一整晚。心态 −6。',f:s=>{s.st.san-=6},tone:'bad'},
- {t:'一家没投过的公司打来电话："同学，考虑一下我们的销售岗吗？"心态 +3。',f:s=>{s.st.san+=3},tone:'warn'},
- {t:'朋友帮你做了一次模拟面试，说你语速太快。面试表达 +5。',f:s=>{s.st.speak+=5},tone:'good'},
- {t:'简历状态显示"HR 已查看"。然后就没有然后了。',f:s=>{},tone:'warn'}
+// 面试中的意外状况
+const TWISTS=[
+ ['视频面试进行到一半，你家 WiFi 断了。',[['秒切手机热点，笑着说"刚刚是网络在考验我"',5,'面试官笑了："反应挺快。"'],['慌到语无伦次，重连了三次',-6,'面试官："要不……我们继续？"']]],
+ ['面试官迟到了 25 分钟，进门第一句："我们抓紧。"',[['微笑说没关系，直接进入正题',4,'面试官松了口气。'],['"我等了半小时了"',-7,'面试官的脸色沉了下来。']]],
+ ['群面你旁边坐着一位"常春藤 + 三段大厂实习"的大佬。',[['和大佬配合，专门补他漏掉的点',6,'你们俩成了全场最默契的组合。'],['正面硬刚，句句反驳他',[-9,10],'全场都在看你们俩。']]],
+ ['面试官的猫跳上了键盘，屏幕上出现一串"ffffffff"。',[['"好可爱！它叫什么？"',6,'面试官聊了两分钟猫，气氛一下子松了。'],['假装没看见，继续回答',0,'面试官把猫抱走了。']]],
+ ['面试官突然问："你能用一句话证明自己不是 AI 吗？"',[['讲一件只有你会干的糗事',7,'面试官笑出了声："行，你是人。"'],['"我是人类，请相信我"',-3,'面试官："AI 也会这么说。"']]]
 ];
 
-/* ========== 状态 ========== */
-let S={phase:'roll',id:null,rerolls:2};
-let busy=false, rolling=false, showDead=false;
+/* ================= 剧情事件（按章节） =================
+   opts: {t, req()→''或'需要…', f()→{msg,tone}} */
+let S;
+const fitJobs=()=>JOBS.filter(j=>fitOf(j)>=0&&!gate(j)&&!S.applied.includes(j.co+j.r));
+const STORY=[
+ {id:'massScript',ch:[1],tag:'简历海投地狱',title:'一键海投脚本',text:'辅导员群里有人分享了一个"一键投递 100 家"的脚本，已经被转发了 300 次。',opts:[
+  {t:'用！先把数量冲上去',f:()=>{massApply(ri(28,40),true);fx({mind:-8});return{msg:'脚本跑了一晚上。你成了 30 多家公司 HR 系统里的一行数据。'}}},
+  {t:'只投专业对口的几家',f:()=>{fx({conf:4});return{msg:'少而精。你对自己的判断多了一点信心。',tone:'good'}}},
+  {t:'研究每个岗位描述，挨个改简历',f:()=>{fx({comp:5,mind:-4});return{msg:'每份简历都像为岗位量身定做的。手很酸，但竞争力上来了。',tone:'good'}}}]},
+ {id:'aiResume',ch:[1],tag:'简历海投地狱',title:'让 AI 写简历',text:'室友说他用 AI 十分钟写完了简历，"比我自己写的强多了"。',opts:[
+  {t:'全交给 AI，复制粘贴直接投',f:()=>{if(R()<.35){fx({conf:-8,comp:-2});return{msg:'HR 回复："您的简历第三行写着\'作为一个 AI 语言模型\'。"',tone:'bad'}}fx({comp:3});return{msg:'看起来挺专业，就是每一句都有点像别人的。'}}},
+  {t:'让 AI 润色，自己逐句核对',f:()=>{fx({comp:6});return{msg:'措辞更利落了，事实也都对得上。',tone:'good'}}},
+  {t:'不用 AI，手写才有灵魂',f:()=>{fx({comp:2,mind:-3});return{msg:'改到凌晨两点。灵魂有了，黑眼圈也有了。'}}}]},
+ {id:'ghostJob',ch:[1,2],tag:'简历海投地狱',title:'岗位消失了',c:()=>S.apps.some(a=>a.st==='active'&&a.si===0),text:'你投过的一个岗位，今天打开链接显示"该职位已下线"。',opts:[
+  {t:'发邮件礼貌地问问 HR',f:()=>{const a=pick(S.apps.filter(a=>a.st==='active'&&a.si===0));if(R()<.3){fx({conf:5});return{msg:'HR 回复："系统 bug，已为您恢复。"你的流程还在。',tone:'good'}}a.st='frozen';a.note='岗位下线，HR 未回复';fx({mind:-3});return{msg:'邮件发出去了，石沉大海。',tone:'bad'}}},
+  {t:'截图发小红书吐槽',f:()=>{const a=pick(S.apps.filter(a=>a.st==='active'&&a.si===0));a.st='frozen';a.note='岗位下线';fx({mind:5});return{msg:'帖子收获 800 个赞，评论区全是"我也是"。心里舒服多了。',tone:'good'}}},
+  {t:'算了，下一个',f:()=>{const a=pick(S.apps.filter(a=>a.st==='active'&&a.si===0));a.st='frozen';a.note='岗位下线';fx({mind:-2});return{msg:'你默默把它从投递表里划掉了。'}}}]},
+ {id:'threeYears',ch:[1],tag:'简历海投地狱',title:'应届生岗位，要求三年经验',text:'一个"2027 届校园招聘"岗位写着：要求 3 年以上相关工作经验。',opts:[
+  {t:'照投不误，万一呢',f:()=>{S.cnt.apply++;S.cnt.rej++;fx({conf:-2,mind:-2});return{msg:'4 分钟后收到拒信。系统比 HR 还快。',tone:'bad'}}},
+  {t:'发朋友圈："请问应届生的三年经验从哪来？"',f:()=>{fx({mind:6});return{msg:'37 个赞，其中有 2 个是 HR。'}}},
+  {t:'默默关掉页面',f:()=>{fx({conf:-2});return{msg:'你关掉了页面，也关掉了一点信心。'}}}]},
+ {id:'paidResume',ch:[1],tag:'简历海投地狱',title:'¥599 简历精修',text:'一个"前大厂 HR"私信你：简历精修 ¥599，"包过简历关"。',opts:[
+  {t:'买！投资自己',req:()=>S.a.money<12?'需要 钱包 ≥ ¥1,200':'',f:()=>{fx({money:-12});if(R()<.7){fx({comp:7});return{msg:'改得确实好，排版、措辞都上了一个台阶。',tone:'good'}}fx({conf:-4});return{msg:'他把你的"熟练使用 Excel"改成了"精通数据分析"。就这？',tone:'bad'}}},
+  {t:'找已经上岸的学姐免费帮忙',f:()=>{fx({comp:4});if(R()<.4){S.refs++;return{msg:'学姐不仅帮你改了简历，还顺手给了一个内推码。',tone:'good'}}return{msg:'学姐改得很认真，还请你喝了杯奶茶。',tone:'good'}}},
+  {t:'不买，我的简历我做主',f:()=>{fx({conf:2});return{msg:'你拉黑了他。'}}}]},
+ {id:'careerFair',ch:[1],tag:'简历海投地狱',title:'双选会',text:'学校体育馆的双选会来了 200 家公司，队伍排到了操场。',opts:[
+  {t:'穿上西装，带 30 份纸质简历去',f:()=>{fx({money:-4,mind:-3,comp:2});if(R()<.5){S.refs++;return{msg:'一个学长看到你的简历，当场给了内推码。',tone:'good'}}return{msg:'发完 30 份简历，收获 6 个帆布袋和 1 个保温杯。'}}},
+  {t:'线上看直播就好',f:()=>{fx({mind:3});return{msg:'躺在床上看完了宣讲直播，弹幕比宣讲有意思。'}}}]},
+ {id:'dreamCo',ch:[1],tag:'简历海投地狱',title:'梦中情司开放网申',text:'你一直想去的公司开放网申了，岗位描述和你的经历高度重合。',opts:[
+  {t:'熬两个晚上，写一份专门的简历',f:()=>{S.rb+=4;fx({comp:3,mind:-4});return{msg:'这可能是你写过最好的一份简历。',tone:'good'}}},
+  {t:'用通用版，先投了再说',f:()=>{fx({conf:1});return{msg:'先占个坑。'}}}]},
+ {id:'eightAM',ch:[2],tag:'面试修罗场',title:'早上 8 点的面试',c:()=>S.apps.some(a=>a.st==='active'&&INTERACTIVE.has(a.stages[a.si].t)),text:'HR 发来邀约：明早 8:00 视频面试。你平时 10 点才起。',opts:[
+  {t:'定三个闹钟，提前一小时起床热身',f:()=>{S.flags.earlyBird=1;S.buff+=5;fx({mind:-4});return{msg:'7 点就坐在电脑前了，咖啡已经续了一杯。',tone:'good'}}},
+  {t:'礼貌申请改到下午',f:()=>{if(R()<.5){fx({conf:3});return{msg:'HR："没问题，下午 3 点。"原来可以商量。',tone:'good'}}S.buff-=5;fx({conf:-3});return{msg:'HR："那就这样吧。"语气有点冷。',tone:'bad'}}}]},
+ {id:'flight',ch:[2],tag:'面试修罗场',title:'异地终面，路费自理',text:'一家公司通知你去总部终面，往返机票加住宿大约 ¥1,500，不报销。',opts:[
+  {t:'自费去，见面三分情',req:()=>S.a.money<15?'需要 钱包 ≥ ¥1,500':'',f:()=>{fx({money:-15,conf:3});S.buff+=8;return{msg:'在会议室里见到了面试官本人。你觉得这趟值。',tone:'good'}}},
+  {t:'申请改成视频面试',f:()=>{S.buff-=3;fx({money:0});return{msg:'HR 同意了，但备注了一句"候选人未到场"。'}}}]},
+ {id:'mianjing',ch:[2],tag:'面试修罗场',title:'面经星球 ¥199',text:'有个知识星球号称有"今年所有大厂的真题"，¥199 一年。',opts:[
+  {t:'买，面经就是生产力',req:()=>S.a.money<6?'需要 钱包 ≥ ¥600':'',f:()=>{fx({money:-6});S.buff+=8;return{msg:'真押中了两道原题。',tone:'good'}}},
+  {t:'去论坛白嫖',f:()=>{S.buff+=3;fx({mind:-2});return{msg:'找到了几篇面经，也被 30 条广告轰炸了。'}}}]},
+ {id:'startupPitch',ch:[2,3],tag:'面试修罗场',title:'室友拉你创业',text:'室友深夜敲门："别找工作了，跟我做一个 AI 简历产品，我们就是下一个独角兽。"',opts:[
+  {t:'认真听他讲完商业计划',f:()=>{S.flags.startup++;fx({conf:4,mind:-2});return{msg:'聊到凌晨三点。你承认，有那么一点心动。',tone:'good'}}},
+  {t:'婉拒："等我先拿个 offer"',f:()=>{fx({});return{msg:'室友："行，等你。"'}}},
+  {t:'泼冷水："你先找到第一个用户"',f:()=>{fx({conf:3});return{msg:'室友沉默了。你觉得自己好像说中了什么。'}}}]},
+ {id:'weekend',ch:[2],tag:'面试修罗场',title:'周末怎么过',text:'难得一个没有面试的周末。',opts:[
+  {t:'录一期播客吐槽秋招',f:()=>{S.flags.passion++;S.flags.passionTag=S.flags.passionTag||'做播客';fx({mind:7});return{msg:'第一期就有 2000 人收听。原来大家都一样惨。',tone:'good'}}},
+  {t:'去咖啡店兼职，顺便学拉花',f:()=>{S.flags.passion++;S.flags.passionTag=S.flags.passionTag||'做咖啡';fx({money:9,mind:2});return{msg:'拉出了人生第一个爱心。店长说你有天赋。',tone:'good'}}},
+  {t:'继续刷题',f:()=>{fx({comp:4,mind:-5});return{msg:'又刷了 20 道题。窗外的阳光与你无关。'}}}]},
+ {id:'friend3',ch:[2,3],tag:'面试修罗场',title:'同学一周拿了三个 offer',text:'同专业的同学在群里发："纠结死了，三个 offer 不知道选哪个。"',opts:[
+  {t:'真心恭喜，顺便请教经验',f:()=>{fx({comp:3,conf:-2});return{msg:'他分享了一份面经。虽然酸，但有用。',tone:'good'}}},
+  {t:'屏蔽他的朋友圈',f:()=>{fx({mind:2});return{msg:'眼不见心不烦。'}}},
+  {t:'内心崩溃，躺床上刷了一晚上手机',f:()=>{fx({mind:-7,conf:-4});return{msg:'刷到凌晨四点，越刷越焦虑。',tone:'bad'}}}]},
+ {id:'familyCall',ch:[3],tag:'HR 终极博弈',title:'家里来电话',text:'妈妈："你表哥考上编了，你要不要也回来考一个？家里都安排好了。"',opts:[
+  {t:'"我再坚持一下"',f:()=>{fx({conf:4,mind:-3});return{msg:'挂了电话，你打开了招聘软件。'}}},
+  {t:'"我认真考虑一下"',f:()=>{fx({mind:5,conf:-3});return{msg:'心里松了一点。原来还有退路。'}}}]},
+ {id:'startupAngel',ch:[3],tag:'HR 终极博弈',title:'室友拿到了天使轮',c:()=>S.flags.startup>=1,text:'当初拉你创业的室友拿到了 200 万天使投资，再次邀请你加入。',opts:[
+  {t:'答应做联合创始人',f:()=>{S.flags.startup+=2;fx({conf:6,mind:-2});return{msg:'你们在出租屋里画了第一版产品图。',tone:'good'}}},
+  {t:'祝福他，但我还是想先上班',f:()=>{fx({});return{msg:'室友："那等你想好了随时来。"'}}}]},
+ {id:'passionGrow',ch:[3],tag:'HR 终极博弈',title:'副业意外火了',c:()=>S.flags.passion>=1,text:()=>`你${S.flags.passionTag||'的副业'}的账号突然涨了 5000 粉，有品牌来问合作。`,opts:[
+  {t:'认真经营，接下合作',f:()=>{S.flags.passion+=2;fx({money:10,mind:4});return{msg:'第一笔合作费到账。这种开心，和收到 offer 不一样。',tone:'good'}}},
+  {t:'先搞秋招，副业放一放',f:()=>{fx({comp:2});return{msg:'你把账号设成了"暂停更新"。'}}}]},
+ {id:'gapDream',ch:[3],tag:'HR 终极博弈',title:'朋友去冰岛 Gap 了',text:'大学室友辞职去冰岛看极光，朋友圈的照片美得不真实。',opts:[
+  {t:'把"Gap 一年"写进备忘录',f:()=>{S.flags.gap=1;fx({mind:6});return{msg:'原来人生还有这个选项。',tone:'good'}}},
+  {t:'点个赞，继续面试',f:()=>{fx({conf:1});return{msg:'极光很美，但房租更真实。'}}}]}
+];
 
+/* ================= 随机事件 ================= */
+const EVENTS=[
+ {t:'两周没音讯的 HR 突然打来电话："同学，你还在看机会吗？"一个泡在池子里的流程复活了。',tone:'good',w:3,c:()=>S.apps.some(a=>a.st==='pool'),f:()=>{const a=pick(S.apps.filter(a=>a.st==='pool'));a.st='active';a.si=Math.min(a.si+1,a.stages.length-1);a.wait=1;a.note='';S.flags.lucky=1;fx({conf:6,mind:4})}},
+ {t:'一家公司宣布"今年校招计划调整"，你的一个流程被取消了。',tone:'bad',w:2,c:()=>S.apps.some(a=>a.st==='active'&&a.si>0),f:()=>{const a=pick(S.apps.filter(a=>a.st==='active'&&a.si>0));a.st='frozen';a.note='校招计划取消，流程终止';fx({mind:-5,conf:-3})}},
+ {t:'凌晨 0:47，手机亮了一下：一封拒信。',tone:'bad',w:2,c:()=>S.apps.some(a=>a.st==='active'&&a.si===0),f:()=>{const a=pick(S.apps.filter(a=>a.st==='active'&&a.si===0));a.st='rej';a.note='凌晨收到拒信';S.cnt.rej++;S.cnt.resume++;fx({mind:-4})}},
+ {t:'一家给你发了 offer 的公司主动把薪资上调了 8%，"希望你尽快确认"。',tone:'good',w:3,c:()=>S.apps.some(a=>a.st==='offer'),f:()=>{const a=pick(S.apps.filter(a=>a.st==='offer'));a.sal=Math.round(a.sal*1.08);fx({conf:5})}},
+ {t:'校友群里一位学长主动私聊你："我们组缺人，内推你一下？"',tone:'good',w:2,f:()=>{S.refs++;fx({conf:2})}},
+ {t:'宣讲会抽奖抽中一个保温杯。',tone:'good',w:1,f:()=>{fx({mind:6})}},
+ {t:'在操场跑了五公里，突然觉得人生也没那么难。',tone:'good',w:1,f:()=>{fx({mind:8})}},
+ {t:'换了一版一页纸简历模板，HR 看得更顺眼了。',tone:'good',w:1,f:()=>{S.rb+=4;fx({comp:2})}},
+ {t:'家里打来 ¥2,000："别饿着。"',tone:'good',w:2,c:()=>S.a.money<40,f:()=>{fx({money:20,mind:3})}},
+ {t:'朋友帮你做了一次模拟面试，说你语速太快。',tone:'good',w:1,f:()=>{fx({comp:3,conf:2})}},
+ {t:'刷到"35 岁被裁"的帖子，焦虑了一整晚。',tone:'bad',w:1,f:()=>{fx({mind:-6})}},
+ {t:'导师："实验做完了吗就天天出去面试？"下周精力 −2。',tone:'bad',w:1,c:()=>S.id.deg.r>0,f:()=>{S.pen+=2;fx({mind:-3})}},
+ {t:'换季发烧了两天。下周精力 −2。',tone:'bad',w:1,f:()=>{S.pen+=2;fx({mind:-2})}},
+ {t:'手机屏幕摔碎了，换屏 ¥800。',tone:'bad',w:1,f:()=>{fx({money:-8,mind:-2})}},
+ {t:'被拉进"秋招互助群"，群里天天有人报喜。',tone:'warn',w:1,f:()=>{fx({comp:3,mind:-5})}},
+ {t:'简历状态显示"HR 已查看"。然后就没有然后了。',tone:'warn',w:1,f:()=>{}},
+ {t:'一家没投过的公司打来电话："同学，考虑一下我们的销售岗吗？"',tone:'warn',w:1,f:()=>{fx({conf:3})}}
+];
+
+/* ================= 成就 ================= */
+const ACH=[
+ {id:'haitou',n:'海投战神',d:'累计投递 100 份简历',ch:'海',c:'var(--orange)',t:()=>S.cnt.apply>=100},
+ {id:'jujian',n:'拒信免疫体',d:'收到 10 封拒信还没放弃',ch:'盾',c:'var(--blue)',t:()=>S.cnt.rej>=10&&S.a.mind>0},
+ {id:'mianshi',n:'面试永动机',d:'完成 10 场面试',ch:'面',c:'var(--purple)',t:()=>S.cnt.interviews>=10},
+ {id:'tanxin',n:'谈薪大师',d:'谈判成功提高了 offer 薪资',ch:'薪',c:'var(--yellow)',t:()=>S.flags.negoWin>=1},
+ {id:'xintai',n:'心态管理大师',d:'整个秋招心理能量从未低于 50',ch:'心',c:'var(--mint)',end:1,t:()=>!S.dead&&S.flags.minMind>=50},
+ {id:'survivor',n:'秋招幸存者',d:'坚持走完全部 12 周',ch:'存',c:'var(--red)',end:1,t:()=>!S.dead},
+ {id:'renmai',n:'人脉王',d:'用掉 4 个内推码',ch:'脉',c:'var(--blue)',t:()=>S.cnt.refUsed>=4},
+ {id:'jinli',n:'锦鲤附体',d:'被人才池捞起，或被消失的 HR 重新联系',ch:'鲤',c:'var(--red)',t:()=>S.flags.lucky},
+ {id:'zaoba',n:'早八战士',d:'接下早上 8 点的面试',ch:'早',c:'var(--yellow)',t:()=>S.flags.earlyBird},
+ {id:'huiyue',n:'毁约侠',d:'签了三方又毁约',ch:'毁',c:'var(--purple)',t:()=>S.cnt.renege>=1},
+ {id:'tiankeng',n:'天坑逆袭',d:'天坑专业拿到年包 25 万以上的 offer',ch:'坑',c:'var(--mint)',t:()=>PIT.has(S.id.major.t)&&S.apps.some(a=>['offer','signed'].includes(a.st)&&a.sal>=25)},
+ {id:'pochan',n:'余额告急',d:'钱包一度低于 ¥1,000',ch:'穷',c:'var(--orange)',t:()=>S.flags.broke},
+ {id:'duoffer',n:'选择困难症',d:'同时手握 3 个 offer',ch:'选',c:'var(--purple)',t:()=>validOffers().length>=3},
+ {id:'cwei',n:'群面 C 位',d:'在群面里拿到最高评价',ch:'C',c:'var(--blue)',t:()=>S.flags.groupC}
+];
+
+/* ================= 状态与属性 ================= */
+const AT={mind:'心理能量',conf:'求职信心',money:'钱包余额',comp:'求职竞争力'};
+const ATC={mind:'var(--mint)',conf:'var(--purple)',money:'var(--yellow)',comp:'var(--blue)'};
+const money$=v=>'¥'+(v*100).toLocaleString();
+let _anim=[], _chips=[];
+function fx(d){
+  for(const k in d){if(!(k in AT))continue;
+    const b=S.a[k];S.a[k]=clamp(Math.round(b+d[k]),0,100);const real=S.a[k]-b;
+    if(real){_anim.push([k,real]);_chips.push([k,real])}}
+  if(S.a.money<10)S.flags.broke=1;
+  S.flags.minMind=Math.min(S.flags.minMind,S.a.mind);
+}
+function chipsHTML(list){
+  if(!list.length)return'';
+  return `<div class="fxs">${list.map(([k,v])=>`<span class="fxc ${v>0?'up':'down'}">${AT[k]} ${v>0?'+':'−'}${k==='money'?money$(Math.abs(v)):Math.abs(v)}</span>`).join('')}</div>`;
+}
 function rollIdentity(){
   const deg=wpick(DEGS);
   const tiers=TIERS.filter(t=>(t.onlyDeg===undefined||t.onlyDeg===deg.r)&&!(deg.r===2&&t.k==='普通二本'));
@@ -391,23 +613,22 @@ function rollIdentity(){
   return {deg,tier:{k:tier.k,halo:tier.halo},school:pick(tier.names),major:pick(MAJORS),trait:pick(traits)};
 }
 function initStats(id){
-  const s={skill:ri(28,46)+[0,8,15][id.deg.r]+Math.round((id.tier.halo-50)*.15)+(id.major.t==='cs'?3:0),
-    speak:ri(25,55),intern:ri(0,30)+[0,10,5][id.deg.r],san:ri(68,80),maxE:5,refs:0,luck:0,rb:0,buff:0,pen:0,paper:0};
+  const s={a:{mind:ri(66,80),conf:ri(42,60),money:ri(38,62),comp:28+[0,8,14][id.deg.r]+Math.round((id.tier.halo-50)*.2)+ri(0,12)+(id.major.t==='cs'?3:0)},
+    maxE:5,refs:0,luck:0,rb:0,paper:0};
   TRAITS.find(t=>t.k===id.trait.k).a(s);
-  norm(s); return s;
+  for(const k in s.a)s.a[k]=clamp(Math.round(s.a[k]),0,100);
+  return s;
 }
-function norm(s){for(const k of ['skill','speak','intern'])s[k]=clamp(Math.round(s[k]),0,100);s.san=clamp(Math.round(s.san),-50,100)}
-function startGame(sameStats){
-  const st=sameStats&&S.init?JSON.parse(JSON.stringify(S.init)):initStats(S.id);
-  S={phase:'play',id:S.id,rerolls:S.rerolls,init:JSON.parse(JSON.stringify(st)),st,week:1,energy:st.maxE,board:[],apps:[],applied:[],log:[],
-     cnt:{apply:0,resume:0,written:0,inter:0,pool:0,offer:0},used:{},uid:1,signed:null,dead:false};
-  newBoard();
-  addLog(`秋招开始。你是${S.id.school}${S.id.major.n}专业的${S.id.deg.k}应届生。`,'');
-  render();
+function freshRun(id,init){
+  const st=JSON.parse(JSON.stringify(init));
+  return {v:2,phase:'play',id,init,rerolls:0,a:st.a,maxE:st.maxE,refs:st.refs,luck:st.luck,rb:st.rb,paper:st.paper,
+    energy:st.maxE,pen:0,buff:0,week:1,board:[],apps:[],applied:[],log:[],used:{},storyUsed:[],uid:1,
+    cnt:{apply:0,mass:0,resume:0,written:0,inter:0,interviews:0,pool:0,offer:0,rej:0,refUsed:0,rests:0,renege:0},
+    flags:{minMind:st.a.mind,negoWin:0,passion:0,passionTag:'',startup:0,gap:0,lucky:0,earlyBird:0,broke:0,groupC:0},
+    massPending:0,queue:[],lines:[],ev:null,weekFx:[],achRun:[],dead:false,ending:null,lastEvTone:''};
 }
 
-/* ========== 判定 ========== */
-const DEGNAME=['本科','硕士','博士'];
+/* ================= 判定 ================= */
 function fitOf(job){const t=S.id.major.t;if(job.m.includes(t))return 10;if(job.m.includes('any'))return 0;return -28}
 function gate(job){
   if(S.id.deg.r<job.d)return `要求${DEGNAME[job.d]}及以上`;
@@ -416,21 +637,21 @@ function gate(job){
 }
 function resumeP(job,ref){
   if(gate(job))return .02;
-  const s=S.st,h=S.id.tier.halo;
-  let sc=.5*h+.25*s.intern+.15*s.skill+[0,8,10][S.id.deg.r]+s.rb+fitOf(job)+(ref?12:0);
+  const h=S.id.tier.halo;
+  let sc=.5*h+.36*S.a.comp+[0,8,10][S.id.deg.r]+S.rb+fitOf(job)+(ref?12:0);
   if(S.id.deg.r===2&&job.d===0&&job.k!=='research')sc-=6;
-  if(job.k==='research'&&s.paper)sc+=8;
-  return clamp(sig((sc-job.bar-6)/6)+s.luck,.03,.92);
+  if(job.k==='research'&&S.paper)sc+=8;
+  return clamp(sig((sc-job.bar-6)/6)+S.luck,.03,.92);
 }
-function pLabel(p){return p>=.7?['高','green']:p>=.4?['中','blue']:p>=.15?['低','amber']:['渺茫','red']}
+function pLabel(p){return p>=.7?['高','g']:p>=.4?['中','b']:p>=.15?['低','a']:['渺茫','r']}
 function stageOutcome(a,type,delta){
-  const s=S.st,h=S.id.tier.halo,job=a.job,eb=Math.max(job.bar,40);let p;
+  const h=S.id.tier.halo,job=a.job,eb=Math.max(job.bar,40),c=S.a.comp,cf=S.a.conf;let p;
   if(type==='resume')p=resumeP(job,a.ref);
-  else if(type==='written'){const sc=.7*s.skill+.12*h+(R()*24-12);p=.85*sig((sc-eb*.85-6)/6)}
-  else if(type==='hr')p=.72+delta*.014;
+  else if(type==='written'){const sc=.75*c+.12*h+(R()*24-12);p=.85*sig((sc-eb*.85-6)/6)}
+  else if(type==='hr')p=.74+delta*.014+(cf-50)*.002;
   else if(type==='check')p=.95;
-  else{const sc=.45*s.speak+.3*s.skill+.08*h+delta+s.buff+(R()*16-8);p=.82*sig((sc-eb*.88-6)/5)}
-  p=clamp(p+(type==='resume'?0:s.luck),.02,.97);
+  else{const sc=.5*c+.16*cf+.08*h+delta+S.buff+(R()*16-8)-(cf<25?5:0);p=.8*sig((sc-eb*.88-7)/5)}
+  p=clamp(p+(type==='resume'?0:S.luck),.02,.97);
   return R()<p;
 }
 const FAIL={
@@ -440,7 +661,7 @@ const FAIL={
  check:['体检复查没过，流程终止。']
 };
 
-/* ========== 招聘板 ========== */
+/* ================= 岗位板 / 投递 ================= */
 function newBoard(){
   const avail=JOBS.filter(j=>!S.applied.includes(j.co+j.r)&&!(j.c==='gov'&&S.week>GOV_DEADLINE));
   const fit=shuffle(avail.filter(j=>fitOf(j)>=0&&!gate(j)));
@@ -449,316 +670,691 @@ function newBoard(){
   for(const j of shuffle(avail)){if(chosen.length>=6)break;if(!chosen.includes(j))chosen.push(j)}
   S.board=shuffle(chosen).map(j=>({...j,uid:S.uid++,sal:ri(j.s[0],j.s[1]),crowd:ri(800,30000)}));
 }
-
-/* ========== 操作 ========== */
-const ACTS=[
- {k:'study',n:'刷题复习',c:2,d:'专业能力提升，越高越难涨'},
- {k:'mock',n:'模拟面试',c:2,d:'面试表达提升，越高越难涨'},
- {k:'proj',n:'补实习/项目',c:3,d:'实习经历提升，越高越难涨'},
- {k:'ref',n:'找学长内推',c:2,d:'55% 拿到内推码'},
- {k:'rest',n:'躺平一下',c:1,d:'心态 +8'}
-];
-const grow=(x,a,b)=>Math.max(1,Math.round(ri(a,b)*(1-x/110)));
-function doAct(k){
-  const a=ACTS.find(x=>x.k===k),s=S.st;if(S.energy<a.c)return;
-  S.energy-=a.c;let v;
-  if(k==='study'){v=grow(s.skill,4,7);s.skill+=v;s.san-=2;addLog(`刷了一晚上题，专业能力 +${v}。`,'')}
-  if(k==='mock'){v=grow(s.speak,4,7);s.speak+=v;s.san-=1;addLog(`对着镜子练自我介绍，面试表达 +${v}。`,'')}
-  if(k==='proj'){v=grow(s.intern,6,10);s.intern+=v;s.san-=3;addLog(`接了个远程实习项目，实习经历 +${v}。`,'')}
-  if(k==='ref'){if(R()<.55){s.refs++;addLog('学长回复了，拿到一个内推码。','good')}else addLog('给三位学长发了消息，都显示"已读"。','warn')}
-  if(k==='rest'){s.san+=8;addLog('关掉招聘软件，睡了个午觉。心态 +8。','good')}
-  norm(s);render();
+function mkApp(j,ref){
+  return {id:S.uid++,job:j,stages:STG[j.c].map(([t,n,w])=>({t,n,w:w||1})),si:0,wait:1,st:'active',ref,sal:j.sal,note:''};
 }
 function apply(uid,ref){
-  const j=S.board.find(x=>x.uid===uid);if(!j||S.energy<1)return;if(ref&&S.st.refs<1)return;
-  S.energy--;if(ref)S.st.refs--;
+  const j=S.board.find(x=>x.uid===uid);if(!j||S.energy<1||busy())return;if(ref&&S.refs<1)return;
+  S.energy--;if(ref){S.refs--;S.cnt.refUsed++}
   S.board=S.board.filter(x=>x.uid!==uid);S.applied.push(j.co+j.r);
-  S.apps.unshift({id:S.uid++,job:j,stages:STG[j.c].map(([t,n,w])=>({t,n,w:w||1})),si:0,wait:1,st:'active',ref,sal:j.sal,note:''});
-  S.cnt.apply++;
+  S.apps.unshift(mkApp(j,ref));S.cnt.apply++;
+  fx({mind:-1});
   addLog(`${ref?'内推':'投递'}：${j.co} · ${j.r}`,'');
-  render();
+  checkAch();save();render();
+}
+function massApply(n,silent){
+  S.cnt.apply+=n;S.cnt.mass+=n;S.massPending+=n;
+  if(!silent)addLog(`一键海投 ${n} 家公司。`,'warn');
+}
+
+/* ================= 行动 ================= */
+const ACTS=[
+ {k:'mass',n:'一键海投',c:2,d:'投递 +20 份 · 心理能量 −6'},
+ {k:'study',n:'刷题复习',c:2,d:'竞争力 ↑ · 心理能量 −2'},
+ {k:'mock',n:'模拟面试',c:2,d:'竞争力 ↑ · 信心 +3'},
+ {k:'ref',n:'找学长内推',c:2,d:'55% 得内推码 · 请奶茶 −¥200'},
+ {k:'work',n:'兼职赚钱',c:2,d:'钱包 +¥1,200 · 心理能量 −3'},
+ {k:'rest',n:'出门放风',c:1,d:'心理能量 +8 · 钱包 −¥300'}
+];
+const grow=(x,a,b)=>Math.max(1,Math.round(ri(a,b)*(1-x/115)));
+function doAct(k){
+  const a=ACTS.find(x=>x.k===k);if(!a||S.energy<a.c||busy())return;
+  S.energy-=a.c;
+  if(k==='mass'){const n=ri(18,26);massApply(n);fx({mind:-6})}
+  if(k==='study'){fx({comp:grow(S.a.comp,3,6),mind:-2});addLog('刷了一晚上题。','')}
+  if(k==='mock'){fx({comp:grow(S.a.comp,2,4),conf:3,mind:-1});addLog('对着镜子练自我介绍。','')}
+  if(k==='ref'){fx({money:-2});if(R()<.55){S.refs++;addLog('学长回复了，拿到一个内推码。','good')}else addLog('给三位学长发了消息，都显示"已读"。','warn')}
+  if(k==='work'){fx({money:12,mind:-3});addLog('去做了两天家教。','');if(R()<.15){S.flags.passion++;S.flags.passionTag=S.flags.passionTag||'教小朋友编程';addLog('你发现自己很喜欢教小朋友编程。','good')}}
+  if(k==='rest'){S.cnt.rests++;fx({mind:8,money:-3});
+    if(R()<.3){const h=pick([['做咖啡','在咖啡店学了拉花，有点上瘾。'],['做播客','录了一期吐槽秋招的播客，挺好玩。'],['画漫画','画了一组秋招四格漫画，朋友都在转。']]);S.flags.passion++;S.flags.passionTag=S.flags.passionTag||h[0];addLog(h[1],'good')}
+    else addLog('关掉招聘软件，出门晒了一下午太阳。','good')}
+  checkAch();save();render();
 }
 function addLog(t,tone){S.log.unshift({w:S.week,t,tone});if(S.log.length>80)S.log.pop()}
 
-/* ========== 周结算 ========== */
-function poolKey(a,stage){return stage.t==='interview'?a.job.k:stage.t}
+/* ================= offer ================= */
+const validOffers=()=>S.apps.filter(a=>a.st==='offer'||a.st==='signed');
+function makeOffer(a){
+  a.st='offer';a.wlb=clamp(WLB[a.job.c]+ri(-1,1),1,5);a.dl=S.week+ri(2,3)+(FIXED_PAY.has(a.job.c)?1:0);
+  a.note='';S.cnt.offer++;
+}
+function signOffer(a){
+  const prev=S.apps.find(x=>x.st==='signed'&&x!==a);let msg='';
+  if(prev){prev.st='declined';prev.note='已毁约（违约金 ¥3,000）';S.cnt.renege++;fx({money:-30,conf:-3});msg=`和 ${prev.job.co} 毁约了，违约金 ¥3,000。`;addLog(`毁约：${prev.job.co}`,'bad')}
+  a.st='signed';a.note='已签三方';fx({mind:10,conf:5});addLog(`签下三方：${a.job.co} · ${a.job.r}`,'good');
+  return msg;
+}
+function declineOffer(a){a.st='declined';a.note='已婉拒';fx({conf:2});addLog(`婉拒了 ${a.job.co} 的 offer。拒 offer 的感觉，真好。`,'')}
+
+/* ================= 周结算队列 ================= */
+let _running=false;
+const busy=()=>_running||(S&&S.queue&&S.queue.length>0);
+function endWeek(){
+  if(busy()||S.phase!=='play')return;
+  for(const a of S.apps){if(a.st==='active')a.wait--}
+  const q=[];
+  S.apps.filter(a=>a.st==='active'&&a.wait<=0).forEach(a=>q.push({t:'stage',id:a.id}));
+  S.apps.filter(a=>a.st==='offer'&&a.dl<=S.week).forEach(a=>q.push({t:'deadline',id:a.id}));
+  q.push({t:'event'},{t:'week'});
+  S.lines=[];S.ev=null;S.weekFx=[];S.queue=q;save();runQueue();
+}
+async function runQueue(){
+  if(_running)return;_running=true;render();
+  try{
+    while(S.queue.length){const st=S.queue[0];await doStep(st);S.queue.shift();checkAch();save();render()}
+  }finally{_running=false}
+  render();
+}
+async function doStep(st){
+  const a=st.id?S.apps.find(x=>x.id===st.id):null;
+  if(st.t==='stage'){
+    if(!a||a.st!=='active')return;
+    const stage=a.stages[a.si];let delta=0,mul=1;
+    if(INTERACTIVE.has(stage.t)){const r=await interview(a,stage);delta=r.delta;mul=r.mul;S.buff=0;S.cnt.interviews++}
+    const got=resolve(a,stage,delta,mul);
+    if(got)S.queue.splice(1,0,{t:'nego',id:a.id});
+  }
+  else if(st.t==='nego'){if(a&&a.st==='offer')await nego(a)}
+  else if(st.t==='deadline'){if(a&&a.st==='offer'&&a.dl<=S.week)await deadline(a)}
+  else if(st.t==='event')randomEvent();
+  else if(st.t==='week')weekTick();
+  else if(st.t==='report')await report();
+  else if(st.t==='broke')await brokeChoice();
+  else if(st.t==='chapter')await chapterCard(st.ch);
+  else if(st.t==='story')await storyEvent();
+  else if(st.t==='finish')finalize();
+}
+function resolve(a,stage,delta,mul){
+  const nm=`${a.job.co} · ${a.job.r}`;
+  _chips=[];
+  const pass=stageOutcome(a,stage.t,delta);
+  if(mul!==1)a.sal=Math.round(a.sal*mul);
+  if(pass){
+    a.si++;
+    if(a.si>=a.stages.length){makeOffer(a);fx({conf:6,mind:8});S.lines.push([`OFFER！${nm}`,'good',_chips]);addLog(`拿到 offer：${nm}`,'good');celebrate();return true}
+    const nx=a.stages[a.si];a.wait=nx.w;fx({conf:1});S.lines.push([`${nm}：${stage.n}通过 → ${nx.n}`,'good',_chips]);
+  }else{
+    const why=gate(a.job);a.failAt=a.si;
+    if(stage.t==='resume'){a.st='rej';a.note=why?`系统自动筛除（${why}）`:pick(FAIL.resume);S.cnt.resume++;S.cnt.rej++;fx({conf:-1,mind:-1})}
+    else if(stage.t==='written'){a.st='rej';a.note=pick(FAIL.written);S.cnt.written++;S.cnt.rej++;fx({conf:-2,mind:-2})}
+    else if(stage.t==='check'){a.st='rej';a.note=pick(FAIL.check);S.cnt.inter++;S.cnt.rej++;fx({conf:-3,mind:-6})}
+    else if(R()<.3){a.st='pool';a.note=`${stage.n}后进了人才池，泡着`;S.cnt.pool++;fx({conf:-2,mind:-1})}
+    else{a.st='rej';a.note=pick(FAIL.inter);S.cnt.inter++;S.cnt.rej++;fx({conf:-5,mind:-4})}
+    S.lines.push([`${nm}：${a.st==='pool'?'泡池子':stage.n+'挂了'}`,a.st==='pool'?'warn':'bad',_chips]);
+    addLog(`${nm}：${a.note}`,a.st==='pool'?'warn':'bad');
+  }
+  return false;
+}
+function randomEvent(){
+  if(R()>.75)return;
+  let pool=EVENTS.filter(e=>!e.c||e.c());
+  if(S.lastEvTone==='bad')pool=pool.filter(e=>e.tone!=='bad');
+  if(S.a.mind<30)pool=pool.filter(e=>e.tone!=='bad'||R()<.5);
+  if(!pool.length)return;
+  const e=wpick(pool);_chips=[];e.f();
+  S.ev={t:e.t,tone:e.tone,fx:_chips};S.lastEvTone=e.tone;addLog(e.t,e.tone==='good'?'good':e.tone==='bad'?'bad':'warn');
+}
+function weekTick(){
+  _chips=[];
+  // 海投结果
+  if(S.massPending){
+    const n=S.massPending;S.massPending=0;
+    const rej=Math.round(n*(.2+R()*.15));S.cnt.rej+=rej;S.cnt.resume+=rej;
+    let spawned=0;
+    for(let i=0;i<n;i++){if(R()<.025){const pool=fitJobs().length?fitJobs():JOBS.filter(j=>!S.applied.includes(j.co+j.r));if(!pool.length)break;const j=pick(pool);const inst={...j,uid:S.uid++,sal:ri(j.s[0],j.s[1]),crowd:0};S.applied.push(j.co+j.r);const a=mkApp(inst,false);a.si=1;a.wait=a.stages[1].w;a.note='海投捞到的';S.apps.unshift(a);spawned++}}
+    fx({mind:-Math.min(6,Math.ceil(rej/3))});
+    S.lines.push([`海投的 ${n} 家：${rej} 封拒信，${n-rej-spawned} 家石沉大海${spawned?`，${spawned} 家通过了简历筛选！`:'。'}`,spawned?'good':'bad',_chips]);
+    addLog(`海投结果：${rej} 封拒信，${spawned} 家进入笔试/面试。`,spawned?'good':'bad');
+    _chips=[];
+  }
+  // 每周固定消耗
+  const d={mind:-2,money:-3};if(S.a.money<20)d.mind-=2;if(S.a.conf<25)d.mind-=1;
+  fx(d);S.weekFx=_chips;
+  const over=S.a.mind<=0;
+  const oldCh=chapterOf(S.week);
+  S.week++;
+  const rest=[{t:'report'}];
+  if(over){S.dead=true;rest.push({t:'finish'})}
+  else if(S.week>TOTAL_WEEKS)rest.push({t:'finish'});
+  else{
+    S.energy=Math.max(1,S.maxE-S.pen);S.pen=0;newBoard();
+    if(S.a.money<=6)rest.push({t:'broke'});
+    const ch=chapterOf(S.week);
+    if(ch!==oldCh)rest.push({t:'chapter',ch});
+    if(ch===1||R()<.6)rest.push({t:'story'});
+  }
+  S.queue.splice(1,0,...rest);
+}
+const chapterOf=w=>w<=4?1:w<=8?2:3;
+
+/* ================= 弹窗系统 ================= */
+function avatar(kind){
+  const col={hr:'var(--purple)',iv:'var(--blue)',boss:'var(--orange)',exam:'var(--mint)',sys:'var(--yellow)',me:'var(--red)'}[kind]||'var(--blue)';
+  const extra={
+    hr:'<path d="M14 30c0-14 8-20 18-20s18 6 18 20c-4-6-10-9-18-9s-14 3-18 9z" fill="var(--ink)"/><circle cx="32" cy="9" r="6" fill="var(--ink)"/>',
+    iv:'<path d="M15 28c2-11 9-16 17-16s15 5 17 16c-5-4-11-6-17-6s-12 2-17 6z" fill="var(--ink)"/><g fill="none" stroke="var(--ink)" stroke-width="2.4"><circle cx="25" cy="35" r="5"/><circle cx="39" cy="35" r="5"/><path d="M30 35h4"/></g>',
+    boss:'<path d="M16 26c3-9 9-12 16-12s13 3 16 12z" fill="var(--ink)"/><rect x="19" y="31" width="11" height="7" rx="3" fill="var(--ink)"/><rect x="34" y="31" width="11" height="7" rx="3" fill="var(--ink)"/><path d="M30 34h4" stroke="var(--ink)" stroke-width="2.4"/>',
+    exam:'<path d="M16 27c2-10 9-14 16-14s14 4 16 14c-6-3-11-4-16-4s-10 1-16 4z" fill="var(--ink)"/><path d="M28 56l4-6 4 6-4 6z" fill="var(--red)"/>',
+    sys:'<path d="M20 26l12-12 12 12" fill="none" stroke="var(--ink)" stroke-width="3"/>',
+    me:'<path d="M15 30c0-12 7-18 17-18s17 6 17 18c-3-5-6-7-9-7l-8 4-8-4c-3 0-6 2-9 7z" fill="var(--ink)"/>'
+  }[kind]||'';
+  const eyes=kind==='boss'||kind==='iv'?'':'<circle cx="26" cy="35" r="2.6" fill="var(--ink)"/><circle cx="38" cy="35" r="2.6" fill="var(--ink)"/>';
+  return `<svg viewBox="0 0 64 64" width="56" height="56" aria-hidden="true"><circle cx="32" cy="32" r="30" fill="${col}" stroke="var(--edge)" stroke-width="3"/><circle cx="32" cy="36" r="17" fill="#ffd8b5" stroke="var(--edge)" stroke-width="2.5"/>${extra}${eyes}<path d="M26 44q6 4 12 0" fill="none" stroke="var(--ink)" stroke-width="2.4" stroke-linecap="round"/></svg>`;
+}
+function openDlg(html){$('#dlg').innerHTML=html;$('#ov').hidden=false;const b=$('#dlg').querySelector('button:not(:disabled)');if(b)try{b.focus({preventScroll:true})}catch(_){}}
+function closeDlg(){$('#ov').hidden=true;$('#dlg').innerHTML=''}
+function reqOf(o){return o.req?o.req():''}
+/* 选择弹窗：返回所选选项的结果 */
+function choiceModal(cfg){
+  return new Promise(res=>{
+    const text=typeof cfg.text==='function'?cfg.text():cfg.text;
+    openDlg(`<div class="dh"><div><div class="tag">${esc(cfg.tag||'')}</div><h3>${esc(cfg.title)}</h3></div>${cfg.stamp?`<span class="stamp" style="font-size:15px">${esc(cfg.stamp)}</span>`:''}</div>
+      <div class="db">
+        <div class="speaker">${avatar(cfg.avatar||'sys')}<div class="bubble">${cfg.who?`<small>${esc(cfg.who)}</small>`:''}${esc(text)}</div></div>
+        <div class="opts">${cfg.opts.map((o,i)=>{const rq=reqOf(o);return `<button class="opt" data-i="${i}" ${rq?'disabled':''}>${esc(o.t)}${rq?`<span class="req">${esc(rq)}</span>`:''}</button>`}).join('')}</div>
+        <div id="fbx"></div>
+      </div>`);
+    $('#dlg').querySelectorAll('.opt').forEach(b=>b.onclick=()=>{
+      const o=cfg.opts[+b.dataset.i];
+      $('#dlg').querySelectorAll('.opt').forEach(x=>{x.disabled=true});b.classList.add('picked');
+      _chips=[];const r=o.f()||{};const chips=_chips.slice();
+      flushAnim();
+      $('#fbx').innerHTML=`<div class="fb ${r.tone||''}">${esc(r.msg||'')}${chipsHTML(chips)}</div><div style="display:flex;justify-content:flex-end;margin-top:12px"><button class="btn" id="cont">${esc(cfg.cont||'继续')} →</button></div>`;
+      const c=$('#cont');try{c.focus({preventScroll:true})}catch(_){}
+      c.onclick=()=>{closeDlg();res(r)};
+    });
+  });
+}
+function infoModal(html,btn){
+  return new Promise(res=>{openDlg(html+`<div class="df"><button class="btn" id="nx">${esc(btn)}</button></div>`);$('#nx').onclick=()=>{closeDlg();res()}});
+}
+
+/* 面试 */
 function drawQ(key){
-  const pool=Q[key];S.used[key]=S.used[key]||[];
+  const pool=Q[key]||Q.general;S.used[key]=S.used[key]||[];
   if(S.used[key].length>=pool.length)S.used[key]=[];
   const left=pool.map((_,i)=>i).filter(i=>!S.used[key].includes(i));
   const i=pick(left);S.used[key].push(i);return pool[i];
 }
-async function endWeek(){
-  if(busy)return;busy=true;
-  const lines=[];const s=S.st;
-  for(const a of S.apps){if(a.st==='active')a.wait--}
-  const due=S.apps.filter(a=>a.st==='active'&&a.wait<=0);
-  for(const a of due){
-    const stage=a.stages[a.si];let delta=0,mul=1;
-    if(INTERACTIVE.has(stage.t)){const r=await ask(a,stage,drawQ(poolKey(a,stage)));delta=r.delta;mul=r.mul;s.buff=0}
-    resolve(a,stage,delta,mul,lines);
-  }
-  // 随机事件
-  let ev=null;
-  if(R()<.7){const pool=EVENTS.filter(e=>!e.c||e.c(S));ev=pick(pool);ev.f(S);addLog(ev.t,ev.tone)}
-  s.san-=2;norm(s);
-  const over=s.san<=0;
-  S.week++;
-  if(!over&&S.week<=TOTAL_WEEKS){S.energy=Math.max(1,s.maxE-s.pen);s.pen=0;newBoard()}
-  await report(lines,ev,over);
-  if(over){S.dead=true;finalize()}
-  else if(S.week>TOTAL_WEEKS)finalize();
-  busy=false;render();
+function optFromQ(o,acc,isGroup){
+  const req=o[4]?()=>{const q=o[4];if(q.conf&&S.a.conf<q.conf)return`需要 求职信心 ≥ ${q.conf}`;if(q.offer&&!validOffers().length)return'需要 手上已有 offer';return''}:null;
+  return {t:o[0],req,f:()=>{
+    const d=Array.isArray(o[1])?ri(o[1][0],o[1][1]):o[1];acc.delta+=d;if(o[3])acc.mul*=o[3];
+    if(isGroup&&d>=12)S.flags.groupC=1;
+    fx(d>=8?{conf:2}:d<=-5?{conf:-4}:{});
+    return{msg:o[2],tone:d>=8?'good':d<=-5?'bad':''};
+  }};
 }
-function resolve(a,stage,delta,mul,lines){
-  const s=S.st,nm=`${a.job.co} · ${a.job.r}`;
-  const pass=stageOutcome(a,stage.t,delta);
-  if(stage.t==='hr')a.sal=Math.round(a.sal*mul);
-  if(pass){
-    a.si++;
-    if(a.si>=a.stages.length){a.st='offer';a.note=`年包约 ${a.sal} 万`;S.cnt.offer++;s.san+=18;lines.push([`OFFER！${nm}，年包约 ${a.sal} 万`,'good']);addLog(`拿到 offer：${nm}`,'good')}
-    else{const nx=a.stages[a.si];a.wait=nx.w;lines.push([`${nm}：${stage.n}通过，进入「${nx.n}」`,'good']);s.san+=2}
-  }else{
-    const why=gate(a.job);
-    if(stage.t==='resume'){a.st='rej';a.note=why?`系统自动筛除（${why}）`:pick(FAIL.resume);S.cnt.resume++;s.san-=2}
-    else if(stage.t==='written'){a.st='rej';a.note=pick(FAIL.written);S.cnt.written++;s.san-=3}
-    else if(stage.t==='check'){a.st='rej';a.note=pick(FAIL.check);S.cnt.inter++;s.san-=8}
-    else if(R()<.3){a.st='pool';a.note=`${stage.n}后进了人才池，泡着`;S.cnt.pool++;s.san-=3}
-    else{a.st='rej';a.note=pick(FAIL.inter);S.cnt.inter++;s.san-=6}
-    a.failAt=a.si;
-    lines.push([`${nm}：${a.st==='pool'?'泡池子':stage.n+'挂了'}`,a.st==='pool'?'warn':'bad']);
-    addLog(`${nm}：${a.note}`,a.st==='pool'?'warn':'bad');
-  }
-  norm(s);
+async function interview(a,stage){
+  const acc={delta:0,mul:1};
+  const asker=stage.t==='hr'?'HR':stage.t==='boss'?'老板':stage.t==='struct'?'主考官':stage.t==='lecture'?'评委':'面试官';
+  const av=stage.t==='hr'?'hr':stage.t==='boss'?'boss':stage.t==='struct'||stage.t==='lecture'?'exam':'iv';
+  fx({mind:-1});
+  if(R()<.2){const tw=pick(TWISTS);await choiceModal({tag:'面试修罗场 · 意外状况',title:`${a.job.co} · ${stage.n}`,stamp:'突发',avatar:'me',who:'意外',text:tw[0],opts:shuffle(tw[1]).map(o=>optFromQ(o,acc)),cont:'稳住，继续面'})}
+  const key=stage.t==='interview'?a.job.k:stage.t;
+  const q=drawQ(key);
+  await choiceModal({tag:`面试修罗场 · ${a.job.r}`,title:`${a.job.co} · ${stage.n}`,avatar:av,who:asker,text:q[0],opts:shuffle(q[1]).map(o=>optFromQ(o,acc,stage.t==='group')),cont:'等结果'});
+  return acc;
 }
+
+/* HR 终极博弈：谈薪 */
+async function nego(a){
+  const co=a.job.co;
+  if(FIXED_PAY.has(a.job.c)){
+    await choiceModal({tag:'HR 终极博弈',title:`${co} 发来录用通知`,stamp:'OFFER',avatar:'exam',who:'人事处',text:`恭喜通过考核。薪资按统一标准执行，年收入约 ${a.sal} 万，没法谈。`,opts:[
+      {t:'理解，按标准来',f:()=>{fx({conf:2});return{msg:'稳定，就是最大的福利。'}}},
+      {t:'问问有没有人才补贴或安家费',f:()=>{if(R()<.5){fx({money:15,conf:3});S.flags.negoWin++;a.sal+=1;return{msg:'还真有：安家费 ¥15,000，年收入多出 1 万。',tone:'good'}}return{msg:'人事处："这个今年没有了。"'}}},
+      {t:'问能不能分到市区岗位',f:()=>{if(R()<.4){a.wlb=Math.max(1,a.wlb-1);return{msg:'分到了市区，通勤 20 分钟。',tone:'good'}}return{msg:'人事处："服从分配。"'}}}],cont:'收下 offer'});
+    return;
+  }
+  const off=Math.round(a.sal*(.85+R()*.08)), want=Math.round(a.sal*1.2);
+  const others=validOffers().filter(x=>x!==a);
+  const best=others.reduce((m,x)=>Math.max(m,x.sal),0);
+  await choiceModal({tag:'HR 终极博弈 · 第一回合',title:`${co} 的 offer 电话`,stamp:'谈薪',avatar:'hr',who:'HR',text:`恭喜！我们给到的薪资是年包 ${off} 万。这已经是这个岗位能给的上限了。`,opts:[
+    {t:'"好的，我接受！"',f:()=>{a.sal=off;fx({conf:-2});return{msg:'你接受得太快了。HR 挂电话前，语气里有一丝后悔没再压一点。'}}},
+    {t:`"我很想加入，但我的预期在 ${Math.round(a.sal*1.05)} 万左右，能再争取一下吗？"`,req:()=>S.a.conf<40?'需要 求职信心 ≥ 40':'',f:()=>{if(R()<.45+S.a.conf/200){a.sal=Math.round(a.sal*1.05);S.flags.negoWin++;fx({conf:6});return{msg:`HR 去问了老板，回来说："可以，${a.sal} 万。"`,tone:'good'}}a.sal=off;fx({conf:-2});return{msg:'HR："真的没有空间了。"'}}},
+    {t:`"另一家给了我 ${best} 万，你们能匹配吗？"`,req:()=>best<=off?'需要 手上有更高的 offer':'',f:()=>{if(R()<.8){a.sal=Math.max(off,Math.min(best,Math.round(a.sal*1.15)));S.flags.negoWin++;fx({conf:8});return{msg:`HR 沉默三秒："我去申请特批。"最后给到 ${a.sal} 万。`,tone:'good'}}a.sal=off;return{msg:'HR："那您可以考虑一下那家。"'}}},
+    {t:`"低于 ${want} 万我就不考虑了。"`,req:()=>S.a.conf<65?'需要 求职信心 ≥ 65':'',f:()=>{const r=R();if(r<.45){a.sal=want;S.flags.negoWin++;fx({conf:8});return{msg:`HR："……行，${want} 万。"你听见自己的心跳声。`,tone:'good'}}if(r<.62){a.st='rescinded';a.note='谈崩了，offer 被收回';fx({conf:-8,mind:-6});addLog(`${co} 收回了 offer。`,'bad');return{msg:'HR："那我们再评估一下。"第二天，offer 被收回了。',tone:'bad'}}a.sal=off;fx({conf:-3});return{msg:'HR："那很遗憾。不过 offer 还给你保留着。"'}}}
+  ],cont:'继续'});
+  if(a.st!=='offer')return;
+  const trick=pick(['pie','ot','dl']);
+  if(trick==='pie')await choiceModal({tag:'HR 终极博弈 · 第二回合',title:'画饼时间',avatar:'hr',who:'HR',text:'薪资就先这样。不过我们发展空间特别大，表现好的话，两年就能做到主管。',opts:[
+    {t:'"听起来很棒！"（相信这张饼）',f:()=>{fx({mind:2});return{msg:'饼很香。能不能吃到，两年后再说。'}}},
+    {t:'"能把调薪机制写进合同吗？"',req:()=>S.a.conf<50?'需要 求职信心 ≥ 50':'',f:()=>{if(R()<.5){a.sal=Math.round(a.sal*1.05);S.flags.negoWin++;fx({conf:4});return{msg:'HR 改了合同：转正后调薪 5%。',tone:'good'}}fx({conf:-1});return{msg:'HR："这个不太好写进去哈。"'}}},
+    {t:'"那能给一笔签字费吗？"',f:()=>{if(R()<.35){fx({money:15});S.flags.negoWin++;return{msg:'签字费 ¥15,000！HR 说你是今年第一个敢开口的。',tone:'good'}}fx({conf:-2});return{msg:'HR："我们没有这个政策。"'}}}],cont:'继续'});
+  else if(trick==='ot')await choiceModal({tag:'HR 终极博弈 · 第二回合',title:'加班这件事',avatar:'hr',who:'HR',text:'我们偶尔需要加加班，没有加班费。这个能接受吧？',opts:[
+    {t:'"能，年轻人多学点"',f:()=>{a.wlb=Math.min(5,a.wlb+1);fx({conf:-1});return{msg:'HR 很满意。你的晚饭时间有点危险了。'}}},
+    {t:'"想了解一下，一周大概加几天？"',f:()=>{if(R()<.5){a.wlb=Math.max(1,a.wlb-1);return{msg:'HR："其实不多，月底忙一点。"',tone:'good'}}a.wlb=5;return{msg:'HR："也就……每天吧。"',tone:'bad'}}},
+    {t:'"我不接受无偿加班。"',f:()=>{if(R()<.25){a.st='rescinded';a.note='因加班问题被收回 offer';fx({conf:-5,mind:-4});addLog(`${co} 收回了 offer。`,'bad');return{msg:'HR："那可能我们不太合适。"offer 被收回了。',tone:'bad'}}a.wlb=Math.max(1,a.wlb-1);fx({conf:4});return{msg:'HR 顿了一下："明白，我们会遵守劳动法。"',tone:'good'}}}],cont:'继续'});
+  else await choiceModal({tag:'HR 终极博弈 · 第二回合',title:'限时答复',avatar:'hr',who:'HR',text:'这个 offer 需要你三天内答复，过期就给下一位候选人了。',opts:[
+    {t:'当场签三方',f:()=>{const m=signOffer(a);return{msg:(m?m+' ':'')+'签了！三方协议寄出去了。',tone:'good'}}},
+    {t:'"能延期到月底吗？我想和家人商量一下"',f:()=>{if(R()<.6){a.dl=S.week+3;fx({conf:2});return{msg:'HR："行，月底前给我答复。"',tone:'good'}}a.dl=S.week+1;fx({conf:-2});return{msg:'HR："最多等到下周。"'}}},
+    {t:'已读不回，先拖着',f:()=>{a.dl=S.week+1;fx({conf:1});return{msg:'HR 发来三个问号。'}}}],cont:'继续'});
+  if(a.st==='offer')addLog(`${co} offer：年包 ${a.sal} 万，第 ${a.dl} 周前答复。`,'good');
+}
+async function deadline(a){
+  const signed=S.apps.find(x=>x.st==='signed');
+  await choiceModal({tag:'HR 终极博弈 · 最后通牒',title:`${a.job.co} 要你今天答复`,stamp:'截止',avatar:'hr',who:'HR',text:`年包 ${a.sal} 万，加班强度 ${'●'.repeat(a.wlb)}${'○'.repeat(5-a.wlb)}。今天不签，offer 就给下一位了。`,opts:[
+    {t:signed?`毁约 ${signed.job.co}，改签这家（违约金 ¥3,000）`:'签三方',f:()=>{const m=signOffer(a);return{msg:(m?m+' ':'')+'签了。',tone:'good'}}},
+    {t:'放弃这个 offer',f:()=>{a.st='expired';a.note='没有在截止日前答复';fx({conf:-1});return{msg:'你看着它过期了。'}}},
+    {t:'"能再给我一周吗？"',f:()=>{if(R()<.4){a.dl=S.week+1;return{msg:'HR 叹了口气："就一周。"',tone:'good'}}a.st='expired';a.note='拖太久，offer 被收回';fx({conf:-4,mind:-3});return{msg:'HR："抱歉，名额已经给别人了。"',tone:'bad'}}}],cont:'继续'});
+}
+async function brokeChoice(){
+  await choiceModal({tag:'钱包危机',title:'饭卡余额不足',avatar:'me',who:'你',text:'食堂刷卡"嘀"的一声：余额不足。钱包只剩 '+money$(S.a.money)+'。',opts:[
+    {t:'给家里打电话',f:()=>{fx({money:30,conf:-5});return{msg:'妈妈转了 ¥3,000，还附了一句"别太累"。你有点想哭。'}}},
+    {t:'去做两周兼职',f:()=>{fx({money:20});S.pen+=2;return{msg:'下周精力 −2，但钱包回血了。'}}},
+    {t:'信用卡分期',f:()=>{fx({money:25,mind:-6});return{msg:'钱有了，焦虑也多了一份。',tone:'bad'}}}],cont:'继续'});
+}
+async function storyEvent(){
+  const ch=chapterOf(S.week);
+  const pool=STORY.filter(e=>e.ch.includes(ch)&&!S.storyUsed.includes(e.id)&&(!e.c||e.c()));
+  if(!pool.length)return;
+  const e=pick(pool);S.storyUsed.push(e.id);
+  const r=await choiceModal({tag:`第 ${S.week} 周 · ${e.tag}`,title:e.title,avatar:'me',who:'本周剧情',text:e.text,opts:e.opts,cont:'继续'});
+  if(r&&r.msg)addLog(`${e.title}：${r.msg}`,r.tone==='good'?'good':r.tone==='bad'?'bad':'');
+}
+async function report(){
+  const last=S.week>TOTAL_WEEKS, w=S.week-1;
+  const lines=S.lines.map(([t,c,ch])=>`<div class="${c}"><span>${esc(t)}${chipsHTML(ch||[])}</span></div>`).join('');
+  await infoModal(`<div class="dh"><div><div class="tag">第 ${w} 周结算</div><h3>${S.lines.length?'本周战报':'风平浪静的一周'}</h3></div><span class="num muted">${weekDate(w)}</span></div>
+    <div class="db">
+      ${lines?`<div class="rep">${lines}</div>`:'<div class="muted">这周没有任何流程出结果。HR 们大概都在开会。</div>'}
+      ${S.ev?`<div class="evt"><b>本周插曲</b>${esc(S.ev.t)}${chipsHTML(S.ev.fx)}</div>`:''}
+      <div class="evt"><b>生活开销</b>房租、饭钱、焦虑${chipsHTML(S.weekFx)}</div>
+      ${S.dead?'<div class="fb bad">心理能量归零。你关掉了所有招聘软件。</div>':last?'<div class="fb">秋招季结束了。来看看你的最终命运。</div>':''}
+    </div>`, S.dead||last?'进入最终命运':`进入第 ${S.week} 周`);
+}
+const CH=[null,
+ {t:'简历海投地狱',d:'岗位很多，回音很少。先把简历投出去，能投多少投多少。',big:'壹'},
+ {t:'面试修罗场',d:'流程陆续推进。面试官已经坐在会议室里等你了。',big:'贰'},
+ {t:'HR 终极博弈',d:'offer 开始出现。薪资、加班、截止日期，每一句都是博弈。',big:'叁'},
+ {t:'最终命运',d:'秋招结束。选一条路，走下去。',big:'肆'}];
+async function chapterCard(ch){
+  const c=CH[ch];
+  await infoModal(`<div class="chapter-card"><div class="no">CHAPTER ${ch} / 4</div><span class="stamp in big" style="font-size:44px">${c.big}</span><h2>${c.t}</h2><p>${c.d}</p></div>`,'开始');
+}
+
+/* ================= 终局 ================= */
 function finalize(){
   for(const a of S.apps){
     if(a.st==='active'){a.st='ghost';a.note=`秋招结束，流程停在「${a.stages[a.si].n}」，再无音讯`}
-    else if(a.st==='pool'&&!S.dead){if(R()<.3){a.st='offer';a.note=`被从人才池捞起！年包约 ${a.sal} 万`;S.cnt.offer++}else{a.note='在池子里泡到了冬天'}}
+    else if(a.st==='pool'&&!S.dead){if(R()<.3){makeOffer(a);a.note='被从人才池捞起！';S.flags.lucky=1}else a.note='在池子里泡到了冬天'}
   }
-  S.phase='end';
+  if(S.dead){S.ending=computeEnding({type:'collapse'});S.phase='end'}
+  else S.phase='final';
+  checkAch(true);
+}
+function destinyOptions(){
+  const offers=validOffers().sort((x,y)=>y.sal-x.sal);
+  const list=offers.map(a=>({type:'offer',id:a.id,k:a.st==='signed'?'已签三方':'手里的 offer',title:`${a.job.co} · ${a.job.r}`,sub:`年包约 ${a.sal} 万 · 加班强度 ${'●'.repeat(a.wlb)}${'○'.repeat(5-a.wlb)}`,req:''}));
+  list.push({type:'gap',k:'隐藏路线',title:'Gap 一年，先去看看世界',sub:'不急着上班，先把自己找回来。',req:S.a.money<25?'需要 钱包 ≥ ¥2,500':S.a.mind<30?'需要 心理能量 ≥ 30':''});
+  list.push({type:'passion',k:'隐藏路线',title:`全职去${S.flags.passionTag||'做喜欢的事'}`,sub:'秋招没留住你，热爱留住了你。',req:S.flags.passion<3?`需要 热爱值 ≥ 3（当前 ${S.flags.passion}）：多出门放风、周末做点喜欢的事`:''});
+  list.push({type:'startup',k:'隐藏路线',title:'和室友一起创业',sub:'拒掉所有 offer，在出租屋里注册公司。',req:S.flags.startup<2?`需要 创业值 ≥ 2（当前 ${S.flags.startup}）：留意室友的邀请`:S.a.conf<50?'需要 求职信心 ≥ 50':''});
+  list.push({type:'spring',k:offers.length?'全都不要':'还没结束',title:offers.length?'全部拒掉，春招再战':'继续海投，春招见',sub:'秋招只是上半场。',req:''});
+  return list;
+}
+function chooseDestiny(i){
+  const o=destinyOptions()[i];if(!o||o.req)return;
+  if(o.type==='offer'){const a=S.apps.find(x=>x.id===o.id);if(a.st!=='signed')signOffer(a)}
+  S.ending=computeEnding(o);S.phase='end';checkAch(true);save();render();window.scrollTo(0,0);
+  if(['dream','multi','ordinary','wlb','startup','passion','gap'].includes(S.ending.key))celebrate();
+}
+function computeEnding(o){
+  const held=validOffers();
+  if(o.type==='collapse')return{key:'collapse',name:'心态崩了 · 考公大军',stamp:'暂停求职',color:'grey',text:'心理能量归零。先把自己照顾好，岗位明年还会有。'};
+  if(o.type==='gap')return{key:'gap',name:'Gap Year 生存者',stamp:'GAP',color:'blue',text:`你决定先停一停。存款还有 ${money$(S.a.money)}，够去看一次极光。简历上空一年，人生里多一年。`};
+  if(o.type==='passion')return{key:'passion',name:'意外发现真正热爱的方向',stamp:'热爱',color:'purple',text:`投了 ${S.cnt.apply} 份简历之后，你发现让你眼睛发光的是${S.flags.passionTag||'别的事'}。你决定试一试。`};
+  if(o.type==='startup')return{key:'startup',name:'创业选手',stamp:'CEO',color:'amber',text:`你拒掉了${held.length?' '+held.length+' 个 offer':'所有可能'}，和室友在出租屋里注册了公司。名片上印着 CEO，工资暂时是 0。`};
+  if(o.type==='spring'){
+    if(S.cnt.apply>=60)return{key:'endless',name:'海投永动机',stamp:'0 OFFER',color:'red',text:`${S.cnt.apply} 份简历，${S.cnt.rej} 封拒信。手指已经形成肌肉记忆。春招见。`};
+    return{key:'spring',name:held.length?'拒掉所有 offer 的勇者':'春招再战',stamp:held.length?'全拒了':'0 OFFER',color:'red',text:held.length?`手里有 ${held.length} 个 offer，你一个都没要。希望春天的你不会后悔。`:'秋招没有结果，但你还在。春招的岗位，已经在路上了。'};
+  }
+  const a=S.apps.find(x=>x.id===o.id)||held[0];
+  const higher=held.some(x=>x!==a&&x.sal>=a.sal+5);
+  if(a.sal>=35)return{key:'dream',name:'梦校级 Offer',stamp:'SSP',color:'green',offer:a,text:`${a.job.co}，年包 ${a.sal} 万。朋友圈文案已经改了 8 版，还没发。`};
+  if(held.length>=3)return{key:'multi',name:'手握多个 Offer',stamp:'多 OFFER',color:'green',offer:a,text:`${held.length} 个 offer 里，你选了 ${a.job.co}。被 HR 追着问"考虑得怎么样"的日子，真好。`};
+  if(a.wlb<=2&&higher)return{key:'wlb',name:'到点下班人',stamp:'WLB',color:'blue',offer:a,text:`你放弃了更高的薪水，选了 ${a.job.co}。从此每天 6 点，晚霞归你。`};
+  return{key:'ordinary',name:'成功上岸',stamp:'已上岸',color:'green',offer:a,text:`${a.job.co} · ${a.job.r}，年包约 ${a.sal} 万。不是 SSP，但是是你的。`};
+}
+function identity(){
+  const c=S.cnt,f=S.flags,e=S.ending||{};
+  if(e.key==='collapse')return['先躺为敬的考公预备役',`投了 ${S.cnt.apply} 份简历，第 ${S.week-1} 周关掉了招聘软件。考公网课已加入购物车。`];
+  if(e.key==='startup')return['未来独角兽创始人（自封）','别人在求 offer，你在给自己发 offer。'];
+  if(e.key==='passion')return['人间清醒转行家',`秋招没留住你，${f.passionTag||'热爱'}留住了你。`];
+  if(c.apply>=80)return['不屈不挠的海投战神',`投出 ${c.apply} 份简历，收到 ${c.rej} 封拒信，依然在投。HR 系统已经认识你了。`];
+  if(f.negoWin>=2)return['谈薪界隐藏高手',`${f.negoWin} 次让 HR 去找老板批预算。谈判桌上，你从不先松口。`];
+  if(c.interviews>=10)return['面试型人格选手',`${c.interviews} 场面试，自我介绍已经能倒背。面试官换了，你没换。`];
+  if(f.lucky||(S.id.trait.k==='锦鲤体质'&&validOffers().length))return['玄学求职锦鲤','竞争力不算顶尖，但运气站在你这边。转发这张图，好运分你一点。'];
+  if(c.rests>=5&&f.minMind>=40)return['佛系求职大师',`${c.rests} 次出门放风，心理能量一直在线。别人在卷，你在晒太阳。`];
+  if(!validOffers().length)return['秋招精神股东','0 offer，但 12 周一天没缺席。秋招的每个坑，你都亲自踩过。'];
+  return['稳扎稳打的上岸选手',`一步一个脚印，${validOffers().length} 个 offer 里挑了最合适的那个。`];
 }
 
-/* ========== 弹窗 ========== */
-function openDlg(html){$('#dlg').innerHTML=html;$('#ov').hidden=false;const b=$('#dlg').querySelector('button');if(b)b.focus()}
-function closeDlg(){$('#ov').hidden=true;$('#dlg').innerHTML=''}
-function ask(a,stage,q){
-  return new Promise(res=>{
-    const [text,opts]=q;const order=shuffle(opts);
-    const asker=stage.t==='hr'?'HR':stage.t==='boss'?'老板':stage.t==='struct'?'主考官':stage.t==='lecture'?'评委':'面试官';
-    openDlg(`<div class="dh"><h3>${esc(stage.n)}</h3><span class="stamp" style="font-size:16px">${esc(a.job.co)}</span></div>
-      <div class="db"><div class="muted" style="font-size:13px">${esc(a.job.r)} · 第 ${S.week} 周</div>
-      <div class="q"><span class="who2">${asker}</span>${esc(text)}</div>
-      <div class="opts">${order.map((o,i)=>`<button class="opt" data-i="${i}">${esc(o[0])}</button>`).join('')}</div>
-      <div id="fbx"></div></div>`);
-    $('#dlg').querySelectorAll('.opt').forEach(b=>b.onclick=()=>{
-      const o=order[+b.dataset.i];
-      const d=Array.isArray(o[1])?ri(o[1][0],o[1][1]):o[1];
-      $('#dlg').querySelectorAll('.opt').forEach(x=>{x.disabled=true});b.classList.add('picked');
-      $('#fbx').innerHTML=`<div class="fb ${d>=8?'good':d<=-5?'bad':''}">${esc(o[2])}</div><div style="display:flex;justify-content:flex-end;margin-top:10px"><button class="btn" id="cont">等结果 →</button></div>`;
-      $('#cont').focus();
-      $('#cont').onclick=()=>{closeDlg();res({delta:d,mul:o[3]||1})};
-    });
-  });
+/* ================= 成就检测 ================= */
+function checkAch(atEnd){
+  if(!S||S.phase==='roll')return;
+  const g=store.get(ACH_KEY)||{};
+  for(const x of ACH){
+    if(S.achRun.includes(x.id))continue;
+    if(x.end&&!atEnd&&S.phase!=='end')continue;
+    if(x.end&&S.phase!=='end'&&S.phase!=='final')continue;
+    let ok=false;try{ok=!!x.t()}catch(_){}
+    if(ok){S.achRun.push(x.id);if(!g[x.id])g[x.id]=Date.now();toast(x)}
+  }
+  store.set(ACH_KEY,g);
 }
-function report(lines,ev,over){
-  return new Promise(res=>{
-    const last=S.week>TOTAL_WEEKS;
-    openDlg(`<div class="dh"><h3>第 ${S.week-1} 周结算</h3><span class="mono muted">${weekDate(S.week-1)}</span></div>
-      <div class="db">
-        ${lines.length?`<div class="rep">${lines.map(([t,c])=>`<div class="${c}">${esc(t)}</div>`).join('')}</div>`:'<div class="muted">这周没有任何流程出结果。HR 们大概都在开会。</div>'}
-        ${ev?`<div class="evt"><b>本周插曲</b>${esc(ev.t)}</div>`:''}
-        ${over?'<div class="fb bad">心态归零。你关掉了所有招聘软件。</div>':last?'<div class="fb">秋招季结束了。看看你手里有什么。</div>':''}
-      </div>
-      <div class="df"><button class="btn" id="nx">${over||last?'查看结局':'进入第 '+S.week+' 周 →'}</button></div>`);
-    $('#nx').onclick=()=>{closeDlg();res()};
-  });
+function toast(x){
+  const box=$('#toasts');if(!box)return;
+  const el=document.createElement('div');el.className='toast';
+  el.innerHTML=`<span class="seal2" style="--c:${x.c};background:${x.c}">${x.ch}</span><div><small>解锁成就</small><b>${esc(x.n)}</b></div>`;
+  box.appendChild(el);
+  setTimeout(()=>{el.classList.add('out');setTimeout(()=>el.remove(),320)},3200);
+}
+function badgesHTML(ids,showLocked){
+  const list=showLocked?ACH:ACH.filter(x=>ids.includes(x.id));
+  if(!list.length)return'<div class="muted" style="font-size:13px">这一局还没有解锁成就。</div>';
+  return `<div class="badges">${list.map(x=>{const on=ids.includes(x.id);return `<div class="badge ${on?'':'locked'}" title="${esc(x.d)}"><span class="seal2" style="--c:${x.c};background:${on?x.c:''}">${x.ch}</span><span>${esc(x.n)}</span></div>`}).join('')}</div>`;
 }
 
-/* ========== 渲染 ========== */
+/* ================= 特效 ================= */
+function flushAnim(){
+  const list=_anim;_anim=[];
+  updateHUD();
+  for(const [k,v] of list){
+    const host=document.getElementById('at-'+k);if(!host)continue;
+    const f=document.createElement('span');f.className='float '+(v>0?'up':'down');
+    f.textContent=(v>0?'+':'−')+(k==='money'?money$(Math.abs(v)):Math.abs(v));
+    host.appendChild(f);setTimeout(()=>f.remove(),1500);
+    if(k==='mind'&&v<=-5){const h=document.getElementById('hud');if(h){h.classList.remove('shake');void h.offsetWidth;h.classList.add('shake')}}
+  }
+}
+function celebrate(){
+  if(reduceMotion())return;
+  const cv=$('#fx');if(!cv||!cv.getContext)return;
+  cv.hidden=false;const W=cv.width=innerWidth,H=cv.height=innerHeight,ctx=cv.getContext('2d');
+  const cs=getComputedStyle(document.documentElement);
+  const cols=['--orange','--blue','--mint','--purple','--yellow','--red'].map(v=>cs.getPropertyValue(v).trim()||'#f80');
+  const ps=Array.from({length:90},()=>({x:W/2+(R()-.5)*W*.3,y:H*.35,vx:(R()-.5)*12,vy:-R()*12-4,r:R()*6+4,c:pick(cols),a:R()*6,va:(R()-.5)*.3}));
+  let t=0;(function f(){ctx.clearRect(0,0,W,H);for(const p of ps){p.x+=p.vx;p.y+=p.vy;p.vy+=.35;p.a+=p.va;ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.a);ctx.fillStyle=p.c;ctx.fillRect(-p.r/2,-p.r/4,p.r,p.r/2);ctx.restore()}
+    if(++t<110)requestAnimationFrame(f);else{ctx.clearRect(0,0,W,H);cv.hidden=true}})();
+}
+
+/* ================= 结果卡片（Canvas 导出） ================= */
+function wrapText(ctx,text,maxW){const lines=[];let cur='';for(const ch of text){if(ctx.measureText(cur+ch).width>maxW&&cur){lines.push(cur);cur=ch}else cur+=ch}if(cur)lines.push(cur);return lines}
+function rr(ctx,x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath()}
+async function drawCard(){
+  try{if(document.fonts&&document.fonts.ready)await document.fonts.ready}catch(_){}
+  const W=1080,H=1500,cv=document.createElement('canvas');cv.width=W;cv.height=H;const c=cv.getContext('2d');
+  const P={bg:'#e6efff',card:'#ffffff',ink:'#1c2042',muted:'#5d6488',orange:'#ff7a3d',blue:'#3b78ff',mint:'#12b386',purple:'#8a5cff',yellow:'#f3b21f',red:'#ff4659',soft:'#f1f5fe'};
+  const disp='"ZCOOL KuaiLe","PingFang SC","Microsoft YaHei",sans-serif', body='"Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif', num='"Rubik","Noto Sans SC",sans-serif', stampF='"Ma Shan Zheng","Kaiti SC","STKaiti",serif';
+  c.fillStyle=P.bg;c.fillRect(0,0,W,H);
+  c.fillStyle='#cbdcff';for(let x=20;x<W;x+=40)for(let y=20;y<H;y+=40){c.beginPath();c.arc(x,y,2.4,0,7);c.fill()}
+  const box=(x,y,w,h,fill,r=36)=>{c.fillStyle=P.ink;rr(c,x+10,y+10,w,h,r);c.fill();c.fillStyle=fill;rr(c,x,y,w,h,r);c.fill();c.lineWidth=5;c.strokeStyle=P.ink;c.stroke()};
+  box(60,60,W-130,H-130,P.card);
+  c.save();rr(c,60,60,W-130,330,36);c.clip();c.fillStyle=P.orange;c.fillRect(60,60,W-130,330);c.restore();
+  c.lineWidth=5;c.strokeStyle=P.ink;c.beginPath();c.moveTo(60,390);c.lineTo(W-70,390);c.stroke();
+  const [title,desc]=identity(),e=S.ending||{};
+  c.fillStyle=P.ink;c.font=`700 30px ${body}`;c.fillText('秋招求生记 · 我的秋招身份',110,130);
+  c.font=`76px ${disp}`;const tl=wrapText(c,title,W-240);tl.slice(0,2).forEach((l,i)=>c.fillText(l,110,225+i*88));
+  c.font=`500 28px ${body}`;c.fillStyle=P.ink;c.fillText(`${S.id.school} · ${S.id.major.n} · ${S.id.deg.k}`,110,tl.length>1?375:330);
+  // 结局印章
+  c.save();c.translate(W-250,520);c.rotate(-.12);c.strokeStyle=P.red;c.fillStyle=P.red;c.lineWidth=6;c.font=`64px ${stampF}`;const sw=Math.max(200,c.measureText(e.stamp||'').width+60);rr(c,-sw/2,-55,sw,110,14);c.stroke();rr(c,-sw/2+9,-46,sw-18,92,10);c.lineWidth=2;c.stroke();c.textAlign='center';c.fillText(e.stamp||'',0,22);c.restore();
+  c.fillStyle=P.muted;c.font=`700 26px ${body}`;c.fillText('最终命运',110,470);
+  c.fillStyle=P.ink;c.font=`58px ${disp}`;c.fillText(e.name||'',110,545);
+  c.font=`30px ${body}`;c.fillStyle=P.ink;const dl=wrapText(c,desc,W-240);dl.slice(0,3).forEach((l,i)=>c.fillText(l,110,615+i*46));
+  // 三个数字
+  const ty=730;const stats=[['投递',S.cnt.apply],['面试',S.cnt.interviews],['OFFER',S.cnt.offer]];
+  const bw=(W-240-40)/3;
+  stats.forEach(([k,v],i)=>{const x=110+i*(bw+20);c.fillStyle=[P.yellow,P.purple,P.mint][i];rr(c,x,ty,bw,150,24);c.fill();c.lineWidth=4;c.strokeStyle=P.ink;c.stroke();c.fillStyle=P.ink;c.textAlign='center';c.font=`800 72px ${num}`;c.fillText(String(v),x+bw/2,ty+88);c.font=`700 24px ${body}`;c.fillText(k,x+bw/2,ty+128);c.textAlign='left'});
+  // 属性条
+  const keys=['mind','conf','money','comp'],cols=[P.mint,P.purple,P.yellow,P.blue];
+  keys.forEach((k,i)=>{const col=i%2,row=Math.floor(i/2);const x=110+col*((W-240)/2+10),y=950+row*86,w=(W-240)/2-30;
+    c.fillStyle=P.ink;c.font=`700 24px ${body}`;c.fillText(AT[k],x,y);c.font=`800 26px ${num}`;c.textAlign='right';c.fillText(k==='money'?money$(S.a[k]):String(S.a[k]),x+w,y);c.textAlign='left';
+    c.fillStyle=P.soft;rr(c,x,y+14,w,26,13);c.fill();c.lineWidth=3;c.strokeStyle=P.ink;c.stroke();
+    if(S.a[k]>0){c.fillStyle=cols[i];rr(c,x+3,y+17,Math.max(20,(w-6)*S.a[k]/100),20,10);c.fill()}});
+  // 成就
+  c.fillStyle=P.muted;c.font=`700 24px ${body}`;c.fillText(`解锁成就 ${S.achRun.length} / ${ACH.length}`,110,1135);
+  const got=ACH.filter(x=>S.achRun.includes(x.id)).slice(0,7);
+  const cvar=v=>({'var(--orange)':P.orange,'var(--blue)':P.blue,'var(--mint)':P.mint,'var(--purple)':P.purple,'var(--yellow)':P.yellow,'var(--red)':P.red}[v]||P.blue);
+  got.forEach((x,i)=>{const cx=150+i*118,cy=1200;c.fillStyle=cvar(x.c);c.beginPath();c.arc(cx,cy,46,0,7);c.fill();c.lineWidth=4;c.strokeStyle=P.ink;c.stroke();c.fillStyle='#fff';c.textAlign='center';c.font=`44px ${stampF}`;c.fillText(x.ch,cx,cy+16);c.fillStyle=P.ink;c.font=`500 19px ${body}`;c.fillText(x.n,cx,cy+80);c.textAlign='left'});
+  if(!got.length){c.fillStyle=P.muted;c.font=`26px ${body}`;c.fillText('这一局一个成就都没拿到，下次一定。',110,1205)}
+  c.fillStyle=P.muted;c.font=`500 24px ${body}`;c.fillText('你也来抽一个身份 →',110,1340);
+  c.fillStyle=P.ink;c.font=`700 26px ${num}`;c.fillText(shareURL().replace(/^https?:\/\//,''),110,1384);
+  return cv;
+}
+function shareURL(){try{return location.href.split('#')[0].split('?')[0]}catch(_){return'https://fei-sun39.github.io/qiuzhao-game/'}}
+function shareText(){const [t]=identity();const e=S.ending||{};return `我在「秋招求生记」抽到【${S.id.school}·${S.id.major.n}·${S.id.deg.k}】，投了 ${S.cnt.apply} 份简历、面了 ${S.cnt.interviews} 场、拿到 ${S.cnt.offer} 个 offer，最终命运：${e.name}。我的秋招身份是「${t}」。你也来抽一个？${shareURL()}`}
+async function saveImage(btn){
+  btn.disabled=true;const old=btn.textContent;btn.textContent='生成中…';
+  try{
+    const cv=await drawCard();const url=cv.toDataURL('image/png');
+    try{const a=document.createElement('a');a.href=url;a.download='秋招求生记-结果卡.png';document.body.appendChild(a);a.click();a.remove()}catch(_){}
+    await infoModal(`<div class="dh"><div><div class="tag">结果卡片</div><h3>已生成</h3></div></div><div class="db preview"><img src="${url}" alt="秋招求生记结果卡片"><div class="muted" style="font-size:13px">电脑上会自动下载。手机或微信里，长按图片保存，再发朋友圈。</div></div>`,'好的');
+  }catch(err){toastMsg('图片生成失败，可以直接截图分享')}
+  btn.disabled=false;btn.textContent=old;
+}
+async function shareResult(btn){
+  const text=shareText();
+  try{
+    if(navigator.share){
+      try{const cv=await drawCard();const blob=await new Promise(r=>cv.toBlob(r,'image/png'));const file=new File([blob],'秋招求生记.png',{type:'image/png'});
+        if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],text});return}}catch(_){}
+      await navigator.share({title:'秋招求生记',text,url:shareURL()});return;
+    }
+  }catch(e){if(e&&e.name==='AbortError')return}
+  try{await navigator.clipboard.writeText(text);toastMsg('战绩和链接已复制，去粘贴给朋友吧')}
+  catch(_){await infoModal(`<div class="dh"><h3>复制下面这段话</h3></div><div class="db"><div class="evt" style="user-select:all">${esc(text)}</div></div>`,'好的')}
+}
+function toastMsg(t){const box=$('#toasts');const el=document.createElement('div');el.className='toast';el.innerHTML=`<div style="padding:4px 6px">${esc(t)}</div>`;box.appendChild(el);setTimeout(()=>{el.classList.add('out');setTimeout(()=>el.remove(),320)},2600)}
+
+/* ================= 渲染 ================= */
 function weekDate(w){const d=new Date(2026,7,31+(w-1)*7),e=new Date(d.getTime()+6*864e5);return `${d.getMonth()+1}/${d.getDate()}–${e.getMonth()+1}/${e.getDate()}`}
-function meter(lab,v,cls=''){
-  const sanCls=cls==='san'?(v<25?' low':v<50?' mid':''):'';
-  return `<div class="meter"><div class="lab"><span>${lab}</span><b>${Math.max(0,v)}</b></div><div class="bar ${cls}${sanCls}"><i style="width:${clamp(v,0,100)}%"></i></div></div>`;
-}
+function masthead(right=''){return `<div class="masthead"><div class="brand"><span class="logo">秋</span><div>秋招求生记<small>2027 届秋招 · 生存模拟</small></div></div>${right}</div>`}
 function idLine(id){
-  return `<span class="chip blue">${id.deg.k}</span><b>${esc(id.school)}</b><span class="chip">${id.tier.k}</span>
-    <span>${esc(id.major.n)}</span>${PIT.has(id.major.t)?'<span class="chip red">天坑</span>':''}
-    <span class="muted">· 天赋：${esc(id.trait.k)}</span>`;
+  return `<span class="chip blue">${id.deg.k}</span><b>${esc(id.school)}</b><span class="chip">${id.tier.k}</span><span>${esc(id.major.n)}</span>${PIT.has(id.major.t)?'<span class="chip red">天坑</span>':''}<span class="chip purple">${esc(id.trait.k)}</span>`;
 }
-function masthead(){return `<div class="masthead"><div class="brand">秋招求生记<small>2027 届 · 秋季校园招聘 · 模拟器</small></div></div>`}
+function attrHTML(k,v,small){
+  return `<div class="attr ${k==='mind'&&v<25?'low':''}" id="at-${k}"><div class="lab"><span>${AT[k]}</span><b class="num" id="av-${k}">${k==='money'?money$(v):v}</b></div><div class="bar" style="--c:${ATC[k]}"><i id="ab-${k}" style="width:${v}%"></i></div></div>`;
+}
+function hudHTML(){
+  const ch=S.phase==='play'?chapterOf(S.week):4;
+  return `<section class="card hud" id="hud">
+    <div class="hud-top"><div class="who">${idLine(S.id)}</div>
+      <div class="weekbox"><div class="w num">${S.phase==='play'?`W${Math.min(S.week,12)}<span class="muted" style="font-size:14px">/12</span>`:'终章'}</div><div class="d">${S.phase==='play'?weekDate(Math.min(S.week,12)):'秋招结束'}</div></div></div>
+    <div class="chapters">${[1,2,3,4].map(i=>`<div class="${i===ch?'on':i<ch?'done':''}"><b>${i}</b><span>${CH[i].t}</span></div>`).join('')}</div>
+    <div class="attrs">${Object.keys(AT).map(k=>attrHTML(k,S.a[k])).join('')}</div>
+    <div class="minis"><span>精力 <span class="pips" id="pips">${pipsHTML()}</span></span><span>内推码 <b id="refs">${S.refs}</b></span><span>投递 <b>${S.cnt.apply}</b></span><span>面试 <b>${S.cnt.interviews}</b></span><span>offer <b>${validOffers().length}</b></span><span>成就 <b>${S.achRun.length}</b>/${ACH.length}</span></div>
+  </section>`;
+}
+function pipsHTML(){const n=Math.max(S.maxE,S.energy);return Array.from({length:n},(_,i)=>`<i class="${i<S.energy?'on':''}"></i>`).join('')}
+function updateHUD(){
+  if(!S||!S.a)return;
+  for(const k in AT){const b=document.getElementById('ab-'+k),v=document.getElementById('av-'+k),h=document.getElementById('at-'+k);
+    if(b)b.style.width=S.a[k]+'%';if(v)v.textContent=k==='money'?money$(S.a[k]):S.a[k];if(h)h.classList.toggle('low',k==='mind'&&S.a[k]<25)}
+  const p=document.getElementById('pips');if(p)p.innerHTML=pipsHTML();
+  const r=document.getElementById('refs');if(r)r.textContent=S.refs;
+}
 
 function renderRoll(){
-  const id=S.id,st=id?initPreview():null;
+  const id=S.id,st=id?S.init:null,g=store.get(ACH_KEY)||{};
+  const gotIds=Object.keys(g);
   return `${masthead()}
-  <section class="sheet form">
-    <div class="form-head"><div class="form-title">求职登记表</div><div class="mono muted" style="font-size:12px">No. 2027-QZ-${String(ri(10000,99999))}</div></div>
+  <section class="card form">
+    <div class="form-head"><div class="form-title">求职登记表</div><div class="num" style="font-size:12px;opacity:.85">No. 2027-QZ-${S.formNo}</div></div>
     <div class="frow"><label>学历</label><div class="cell" id="f0">${id?id.deg.k:'？'}</div></div>
     <div class="frow"><label>学校</label><div class="cell" id="f1">${id?`${esc(id.school)} <span class="chip">${id.tier.k}</span>`:'？'}</div></div>
     <div class="frow"><label>专业</label><div class="cell" id="f2">${id?`${esc(id.major.n)} ${PIT.has(id.major.t)?'<span class="chip red">天坑专业</span>':''}`:'？'}</div></div>
     <div class="frow"><label>天赋</label><div class="cell" id="f3">${id?`${esc(id.trait.k)} <span class="sub">${esc(id.trait.d)}</span>`:'？'}</div></div>
-    ${st?`<div class="statgrid">${meter('专业能力',st.skill)}${meter('面试表达',st.speak)}${meter('实习经历',st.intern)}${meter('心态',st.san,'san')}</div>`:''}
+    ${st?`<div class="form-stats"><div class="attrs">${Object.keys(AT).map(k=>attrHTML(k,st.a[k])).join('')}</div></div>`:''}
     ${id?`<span class="stamp seal in">命运已定</span>`:''}
     <div class="form-foot">
       ${!id?`<button class="btn" data-a="roll" id="rollbtn">抽取我的身份</button><span class="muted" style="font-size:13px">学历、学校、专业、天赋全靠随机</span>`
-        :`<button class="btn" data-a="start">就这个身份，开始秋招</button>
-          <button class="btn ghost" data-a="reroll" ${S.rerolls<1?'disabled':''}>不认命，重抽（剩 ${S.rerolls} 次）</button>`}
+        :`<button class="btn" data-a="start">就这个身份，开始秋招</button><button class="btn alt" data-a="reroll" ${S.rerolls<1?'disabled':''}>不认命，重抽（剩 ${S.rerolls} 次）</button>`}
     </div>
   </section>
-  <section class="howto">
-    <div><b>怎么玩：</b>秋招一共 12 周。每周有 5 点精力，用来投简历、刷题、练面试、找内推。点「结束本周」后，投出去的简历一关一关出结果，面试要你自己答题。</div>
-    <div class="path"><span>简历</span>›<span>笔试 / 测评</span>›<span>面试 / 群面</span>›<span>HR面 / 体检</span>›<span>OFFER</span></div>
-    <div>心态掉到 0 就会退出求职。秋招结束前拿到的 offer，挑一个签三方。</div>
+  <section class="intro">
+    <div class="steps4">${[1,2,3,4].map(i=>`<div><em>CH.${i}</em><b>${CH[i].t}</b><span>${['海投、改简历、找内推','笔试、群面、手撕代码','谈薪、画饼、限时答复','十种结局等你解锁'][i-1]}</span></div>`).join('')}</div>
+    <div class="card" style="padding:14px 16px;display:grid;gap:8px">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px"><b style="font-family:var(--f-display);font-weight:400;font-size:19px">成就墙</b><span class="muted num" style="font-size:13px">${gotIds.length} / ${ACH.length}</span></div>
+      ${badgesHTML(gotIds,true)}
+    </div>
+    <div class="muted" style="font-size:13px">每周 5 点精力，投简历、刷题、练面试、打工赚钱都要花。心理能量归零就会退出求职。进度自动保存在这台设备上。</div>
   </section>`;
 }
-let _preview=null;
-function initPreview(){if(!_preview||_preview.id!==S.id){_preview={id:S.id,st:initStats(S.id)}}S.init=_preview.st;return _preview.st}
-
 function jobCard(j){
   const p=resumeP(j,false),[pl,pc]=pLabel(p),g=gate(j),f=fitOf(j);
   const majTxt=j.m.includes('any')?(j.m.length>1?j.m.filter(x=>x!=='any').map(x=>MAJ_LABEL[x]).join('/')+'优先':'不限专业'):j.m.map(x=>MAJ_LABEL[x]).join(' / ');
+  const dis=S.energy<1||busy();
   return `<div class="job">
-    <div class="hd"><div><div class="co">${esc(j.co)}</div><div class="role">${esc(j.r)}</div></div><div class="sal">${j.sal}<span class="muted" style="font-weight:400;font-size:12px"> 万/年</span></div></div>
+    <div class="hd"><div><div class="co">${esc(j.co)}</div><div class="role">${esc(j.r)}</div></div><div class="sal">${j.sal}<small> 万/年</small></div></div>
     <div class="tags"><span class="chip">${CAT[j.c]}</span><span class="chip">${DEGNAME[j.d]}+</span><span class="chip">${majTxt}</span>
       ${g?`<span class="chip red">${g}</span>`:f>0?'<span class="chip green">专业对口</span>':f<0?'<span class="chip red">专业不对口</span>':''}
-      ${j.c==='gov'?`<span class="chip amber">第 ${GOV_DEADLINE} 周截止报名</span>`:''}</div>
-    <div class="ft"><span class="muted">${j.crowd.toLocaleString()} 人已投 · 简历过筛 <b class="${pc==='green'?'good':pc==='red'?'bad':pc==='amber'?'warn':''}">${pl}</b></span>
-      <div class="btns"><button class="btn small ghost" data-a="ref" data-u="${j.uid}" ${S.energy<1||S.st.refs<1?'disabled':''}>内推投递</button>
-      <button class="btn small" data-a="apply" data-u="${j.uid}" ${S.energy<1?'disabled':''}>投递</button></div></div>
+      ${j.c==='gov'?`<span class="chip amber">W${GOV_DEADLINE} 截止报名</span>`:''}</div>
+    <div class="ft"><span class="muted">${j.crowd.toLocaleString()} 人已投 · 简历过筛 <span class="odds ${pc}">${pl}</span></span>
+      <div class="btns"><button class="btn sm alt" data-a="ref" data-u="${j.uid}" ${dis||S.refs<1?'disabled':''}>内推投递</button><button class="btn sm" data-a="apply" data-u="${j.uid}" ${dis?'disabled':''}>投递</button></div></div>
+  </div>`;
+}
+function wlbHTML(n){return `<span class="wlb" title="加班强度">${[1,2,3,4,5].map(i=>`<i class="${i<=n?'on':''}"></i>`).join('')}</span>`}
+function offerCard(a){
+  const signed=a.st==='signed',other=S.apps.find(x=>x.st==='signed'&&x!==a);
+  return `<div class="offer"><div class="hd"><div><b>${esc(a.job.co)}</b><div class="muted" style="font-size:13px">${esc(a.job.r)}</div></div><div class="sal">${a.sal}<small> 万/年</small></div></div>
+    <div class="note">加班强度 ${wlbHTML(a.wlb)} · ${signed?'<b class="t-good">已签三方</b>':`第 <b class="num">${a.dl}</b> 周前答复`}</div>
+    ${signed?'':`<div class="btns"><button class="btn sm mint" data-a="sign" data-i="${a.id}" ${busy()?'disabled':''}>${other?'毁约改签（−¥3,000）':'签三方'}</button><button class="btn sm alt" data-a="decline" data-i="${a.id}" ${busy()?'disabled':''}>婉拒</button></div>`}
   </div>`;
 }
 function appItem(a){
-  const dead=['rej','ghost','frozen'].includes(a.st)||(a.st==='pool'&&S.phase==='end');
-  const pipe=a.stages.map((s,i)=>{
-    let c='';if(a.st==='offer'||i<a.si)c='done';else if(i===a.si)c=a.st==='active'?'cur':(a.st==='pool'||a.st==='ghost')?'cur':'fail';
-    return `<span class="${c}">${esc(s.n)}</span>`}).join('');
+  const dead=['rej','ghost','frozen','expired','declined','rescinded'].includes(a.st)||(a.st==='pool'&&S.phase!=='play');
+  const pipe=a.stages.map((s,i)=>{let c='';if(['offer','signed'].includes(a.st)||i<a.si)c='done';else if(i===a.si)c=['active','pool','ghost','frozen'].includes(a.st)?'cur':a.st==='rej'?'fail':'';return `<span class="${c}">${esc(s.n)}</span>`}).join('');
+  const ST={offer:['OFFER','green'],signed:['已签约','green'],rej:['已挂',''],pool:['泡池','amber'],frozen:['取消','grey'],ghost:['无音讯','grey'],expired:['过期','grey'],declined:['已拒','grey'],rescinded:['被收回','']};
   let right='',note=a.note;
-  if(a.st==='offer')right='<span class="stamp green in">OFFER</span>';
-  else if(a.st==='rej')right='<span class="stamp">已挂</span>';
-  else if(a.st==='pool')right='<span class="stamp amber">泡池</span>';
-  else if(a.st==='frozen')right='<span class="stamp grey">冻结</span>';
-  else if(a.st==='ghost')right='<span class="stamp grey">无音讯</span>';
-  else{const s=a.stages[a.si];note=`${INTERACTIVE.has(s.t)?(a.wait<=1?'本周末'+s.n:a.wait+' 周后'+s.n):(a.wait<=1?'本周末出结果':a.wait+' 周后出结果')}${a.ref?' · 内推':''}`}
-  return `<div class="appi ${dead?'dead':''}"><div class="hd"><div class="nm">${esc(a.job.co)} <small>· ${esc(a.job.r)}</small></div>${right}</div>
-    <div class="pipe">${pipe}</div><div class="note">${esc(note)}</div></div>`;
+  if(ST[a.st])right=`<span class="stamp ${ST[a.st][1]}">${ST[a.st][0]}</span>`;
+  else{const s=a.stages[a.si];note=`${a.wait<=1?'本周末':a.wait+' 周后'}${INTERACTIVE.has(s.t)?s.n:'出'+s.n+'结果'}${a.ref?' · 内推':''}${a.note?' · '+a.note:''}`}
+  return `<div class="appi ${dead?'dead':''}"><div class="hd"><div class="nm">${esc(a.job.co)} <small>· ${esc(a.job.r)}</small></div>${right}</div><div class="pipe">${pipe}</div><div class="note">${esc(note)}</div></div>`;
 }
+let showDead=false;
 function renderPlay(){
-  const s=S.st,id=S.id;
-  const live=S.apps.filter(a=>['active','offer','pool'].includes(a.st)),dead=S.apps.filter(a=>!['active','offer','pool'].includes(a.st));
-  live.sort((x,y)=>(x.st==='offer'?0:x.st==='active'?1:2)-(y.st==='offer'?0:y.st==='active'?1:2));
-  return `${masthead()}
-  <section class="sheet">
-    <div class="top"><div class="who">${idLine(id)}</div>
-      <div class="week"><div class="mono big">第 ${S.week} / ${TOTAL_WEEKS} 周</div><div class="muted mono" style="font-size:12px">${weekDate(S.week)}</div><div class="prog"><i style="width:${(S.week-1)/TOTAL_WEEKS*100}%"></i></div></div></div>
-    <div class="statgrid" style="border-top:1px solid var(--rule)">${meter('心态',s.san,'san')}${meter('专业能力',s.skill)}${meter('面试表达',s.speak)}${meter('实习经历',s.intern)}
-      <div class="meter"><div class="lab"><span>精力</span><b>${S.energy}/${s.maxE}</b></div><div class="energy">${Array.from({length:Math.max(s.maxE,S.energy)},(_,i)=>`<i class="${i<S.energy?'on':''}"></i>`).join('')}</div></div>
-      <div class="meter"><div class="lab"><span>内推码</span><b>${s.refs}</b></div><div class="muted" style="font-size:11.5px">内推投递简历分 +12</div></div>
-    </div>
-    <div class="actions">${ACTS.map(a=>`<button class="act" data-a="act" data-k="${a.k}" ${S.energy<a.c?'disabled':''}><b>${a.n} <span class="mono">−${a.c}</span></b><span>${a.d}</span></button>`).join('')}</div>
-  </section>
+  const offers=validOffers();
+  const live=S.apps.filter(a=>['active','pool'].includes(a.st)),dead=S.apps.filter(a=>!['active','pool','offer','signed'].includes(a.st));
+  live.sort((x,y)=>(x.st==='active'?0:1)-(y.st==='active'?0:1));
+  return `${masthead(`<button class="btn sm alt" data-a="quit">重新开始</button>`)}
+  ${hudHTML()}
+  <div class="acts">${ACTS.map(a=>`<button class="act" data-a="act" data-k="${a.k}" ${S.energy<a.c||busy()?'disabled':''}><b>${a.n}<span class="pips">${'<i></i>'.repeat(a.c)}</span></b><span>${a.d}</span></button>`).join('')}</div>
   <div class="cols">
-    <section class="sheet panel"><h2>本周岗位 <small>投递一次耗 1 点精力</small></h2>
+    <section class="card panel"><div class="ph orange"><h2>本周岗位</h2><small>投递 1 点精力</small></div>
       ${S.board.length?S.board.map(jobCard).join(''):'<div class="empty">这周的岗位都投完了。下周会刷新。</div>'}</section>
-    <section class="sheet panel"><h2>我的投递 <small class="mono">${S.cnt.apply} 份 · ${S.cnt.offer} offer</small></h2>
-      ${live.length?live.map(appItem).join(''):'<div class="empty">还没投简历。左边挑几个岗位试试。</div>'}
-      ${dead.length?`<button class="fold" data-a="fold">${showDead?'收起':'展开'}已结束的 ${dead.length} 个流程</button>${showDead?dead.map(appItem).join(''):''}`:''}
-    </section>
-  </div>
-  <section class="sheet panel"><h2>求职日志</h2><div class="log">${S.log.map(l=>`<div><span class="w">W${l.w}</span><span class="${l.tone}">${esc(l.t)}</span></div>`).join('')}</div></section>
-  <div class="dock"><div class="in"><span class="muted" style="font-size:13px">还剩 <b class="mono" style="color:var(--ink)">${S.energy}</b> 点精力${S.energy>0?'，用完再结束也行':''}</span>
-    <button class="btn" data-a="end">结束本周 →</button></div></div>`;
+    <div class="stack">
+      ${offers.length?`<section class="card panel"><div class="ph mint"><h2>Offer 抽屉</h2><small>${offers.length} 个</small></div>${offers.map(offerCard).join('')}</section>`:''}
+      <section class="card panel"><div class="ph"><h2>我的流程</h2><small class="num">${live.length} 个进行中</small></div>
+        ${live.length?live.map(appItem).join(''):'<div class="empty">还没有进行中的流程。左边挑几个岗位投一投。</div>'}
+        ${dead.length?`<button class="fold" data-a="fold">${showDead?'收起':'展开'}已结束的 ${dead.length} 个流程</button>${showDead?dead.map(appItem).join(''):''}`:''}
+      </section>
+      <section class="card panel"><div class="ph"><h2>求职日志</h2></div><div class="log">${S.log.slice(0,40).map(l=>`<div><span class="w">W${l.w}</span><span class="${l.tone?'t-'+l.tone:''}">${esc(l.t)}</span></div>`).join('')}</div></section>
+    </div>
+  </div>`;
 }
-
-const FLAVOR={bigtech:'工牌到手，福报开始。',foreign:'Work-life balance，至少合同上写着。',soe:'五险二金，食堂很香。',bank:'先从柜台干起，存款指标已经在路上了。',
-  finance:'西装买好了，凌晨两点的 PPT 也在等你。',gov:'上岸了。家族群开始转发。',edu:'寒暑假是真的，家长群也是真的。',academic:'非升即走，倒计时开始。',
-  startup:'期权很多，工资准不准时看下一轮融资。',consult:'航空公司金卡办好了，睡眠另说。',other:'也是一份正经工作。'};
-function grade(sal){return sal>=40?'SSP':sal>=25?'SP':sal>=15?'普通 offer':'保底 offer'}
-function shareText(res){
-  const id=S.id,c=S.cnt;
-  return `我在「秋招求生记」抽到【${id.school}·${id.major.n}·${id.deg.k}】，投了 ${c.apply} 份简历：简历挂 ${c.resume}、笔试挂 ${c.written}、面试挂 ${c.inter}、泡池子 ${c.pool}。最后${res}。你也来抽一个？`;
+function renderFinal(){
+  const opts=destinyOptions();
+  return `${masthead()}${hudHTML()}
+  <section class="card" style="padding:18px;display:grid;gap:14px">
+    <div><div class="muted" style="font-size:12px;letter-spacing:.2em;font-weight:700">第四章 · 最终命运</div><h2 style="font-family:var(--f-display);font-weight:400;font-size:28px">秋招结束了。选一条路。</h2>
+    <div class="muted" style="font-size:14px">高薪和准点下班，你只能选一个。有些路线需要你在前面几章做过特定的选择才会解锁。</div></div>
+    <div class="destiny">${opts.map((o,i)=>`<button class="dest ${o.type==='offer'?'offerd':''}" data-a="destiny" data-i="${i}" ${o.req?'disabled':''}><span class="k">${esc(o.k)}</span><b>${esc(o.title)}</b><span class="s">${esc(o.sub)}</span>${o.req?`<span class="req">${esc(o.req)}</span>`:''}</button>`).join('')}</div>
+  </section>`;
 }
 function renderEnd(){
-  const offers=S.apps.filter(a=>a.st==='offer').sort((x,y)=>y.sal-x.sal);const c=S.cnt;
-  const tally=`<div class="tally"><div><span>投递</span><b>${c.apply}</b></div><div><span>简历挂</span><b>${c.resume}</b></div><div><span>笔试挂</span><b>${c.written}</b></div>
-    <div><span>面试挂</span><b>${c.inter}</b></div><div><span>泡池子</span><b>${c.pool}</b></div><div><span>OFFER</span><b>${offers.length}</b></div></div>`;
-  let body;
-  if(S.dead){
-    body=`<span class="stamp grey in">暂停求职</span><h1>第 ${S.week-1} 周，心态崩了</h1>
-      <p>你关掉了招聘软件，打开了考公网课。${offers.length?`手里其实还有 ${offers.length} 个 offer，但你已经不想看了。`:''}</p>${tally}
-      <div class="share" id="sh">${esc(shareText('心态崩了，回家考公'))}</div>`;
-  }else if(offers.length&&!S.signed){
-    body=`<span class="stamp green in">秋招结束</span><h1>你有 ${offers.length} 个 offer，选一家签三方</h1>${tally}
-      <div class="offerlist">${offers.map(a=>`<div class="offerrow"><div><b>${esc(a.job.co)}</b> · ${esc(a.job.r)}<div class="muted" style="font-size:13px">${CAT[a.job.c]} · 年包约 <span class="mono">${a.sal}</span> 万 · ${grade(a.sal)}</div></div>
-        <button class="btn small" data-a="sign" data-i="${a.id}">签这家</button></div>`).join('')}</div>`;
-  }else if(S.signed){
-    const a=S.signed;
-    const res=`签了${a.job.co}的${a.job.r}，年包约 ${a.sal} 万`;
-    body=`<span class="stamp in">已签三方</span><h1>${esc(a.job.co)}<br>${esc(a.job.r)}</h1>
-      <p><span class="chip blue">${CAT[a.job.c]}</span> <span class="chip ${a.sal>=25?'green':''}">${grade(a.sal)}</span> <span class="mono">年包约 ${a.sal} 万</span></p>
-      <p>${FLAVOR[a.job.c]}</p>${tally}<div class="share" id="sh">${esc(shareText(res))}</div>`;
-  }else{
-    const gov=S.apps.some(a=>a.job.c==='gov');
-    const t=gov?'考公大军，明年见':pick(['春招再战','先去考个研','灵活就业，自由职业者']);
-    body=`<span class="stamp in">0 OFFER</span><h1>${t}</h1>
-      <p>秋招结束，手里没有 offer。${S.id.tier.halo>=80?'学校名气没能救你，这届真的难。':'这不是你一个人的问题。'}春招还有机会。</p>${tally}
-      <div class="share" id="sh">${esc(shareText('0 offer，'+t))}</div>`;
-  }
-  const done=S.dead||S.signed||!offers.length;
-  return `${masthead()}<section class="sheet ending">${body}
-    ${done?`<div class="row-btns"><button class="btn" data-a="copy" id="cpy">复制战绩</button><button class="btn ghost" data-a="again">同一身份再来</button><button class="btn ghost" data-a="new">重新抽身份</button></div>`:''}
-  </section>
-  <section class="sheet panel"><h2>全部投递记录</h2>${S.apps.map(appItem).join('')||'<div class="empty">一份都没投。</div>'}</section>`;
+  const e=S.ending,[title,desc]=identity();
+  return `${masthead()}
+  <div class="result">
+    <section class="card rcard" id="rcard">
+      <div class="top"><span class="k">我的秋招身份</span><h1>${esc(title)}</h1><span style="font-size:14px;font-weight:500">${esc(S.id.school)} · ${esc(S.id.major.n)} · ${S.id.deg.k}</span></div>
+      <div class="bd">
+        <div class="ending"><div><div class="muted" style="font-size:12px;font-weight:700;letter-spacing:.2em">最终命运</div><div style="font-family:var(--f-display);font-size:28px">${esc(e.name)}</div></div><span class="stamp in ${e.color==='green'?'green':e.color==='blue'?'blue':e.color==='purple'?'purple':e.color==='amber'?'amber':e.color==='grey'?'grey':''}">${esc(e.stamp)}</span></div>
+        <div class="desc">${esc(desc)}</div>
+        <div class="muted" style="font-size:14px">${esc(e.text)}</div>
+        <div class="tri"><div><b>${S.cnt.apply}</b><span>投递</span></div><div><b>${S.cnt.interviews}</b><span>面试</span></div><div><b>${S.cnt.offer}</b><span>OFFER</span></div></div>
+        <div class="rattrs">${Object.keys(AT).map(k=>attrHTML(k,S.a[k])).join('').replace(/id="a[tvb]-\w+"/g,'')}</div>
+        <div><div class="muted" style="font-size:12px;font-weight:700;letter-spacing:.2em;margin-bottom:8px">本局成就 ${S.achRun.length} / ${ACH.length}</div>${badgesHTML(S.achRun,false)}</div>
+      </div>
+    </section>
+    <div class="side">
+      <section class="card" style="padding:16px;display:grid;gap:10px">
+        <b style="font-family:var(--f-display);font-weight:400;font-size:20px">晒一晒</b>
+        <div class="btns"><button class="btn" data-a="img">保存结果图片</button><button class="btn blue" data-a="share">分享给朋友</button></div>
+        <div class="btns"><button class="btn alt" data-a="again">同一身份再来</button><button class="btn alt" data-a="new">重新抽身份</button></div>
+        <div class="muted" style="font-size:12.5px">微信里点"保存结果图片"，长按图片即可保存到相册。</div>
+      </section>
+      <section class="card panel"><div class="ph"><h2>全部流程</h2><small>${S.apps.length} 个</small></div>${S.apps.map(appItem).join('')||'<div class="empty">一个流程都没有。海投的那些，都石沉大海了。</div>'}</section>
+    </div>
+  </div>`;
+}
+function renderDock(){
+  const d=$('#dock');
+  if(!S||S.phase!=='play'){d.innerHTML='';return}
+  d.innerHTML=`<div class="dock"><div class="in"><div class="info"><span>精力 <span class="pips">${pipsHTML()}</span></span><span>第 ${S.week} 周 · ${CH[chapterOf(S.week)].t}</span></div>
+    <button class="btn" data-a="end" ${busy()?'disabled':''}>${busy()?'处理中…':'结束本周 →'}</button></div></div>`;
 }
 function render(){
-  const app=$('#app');
-  app.innerHTML=S.phase==='roll'?renderRoll():S.phase==='play'?renderPlay():renderEnd();
+  const app=$('#app');if(!app)return;
+  app.innerHTML=S.phase==='roll'?renderRoll():S.phase==='play'?renderPlay():S.phase==='final'?renderFinal():renderEnd();
+  renderDock();
+  if(_anim.length)requestAnimationFrame(flushAnim);
 }
+function save(){if(S&&S.phase!=='roll')store.set(SAVE_KEY,S);else store.del(SAVE_KEY)}
 
-/* ========== 抽签动画 ========== */
+/* ================= 抽签 ================= */
+let rolling=false;
+function newRollState(rerolls=2){return{phase:'roll',id:null,init:null,rerolls,formNo:String(ri(10000,99999))}}
 function animateRoll(){
-  rolling=true;
+  if(rolling)return;rolling=true;
   const id=rollIdentity();
-  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const finish=()=>{S.id=id;S.init=initStats(id);rolling=false;render()};
+  if(reduceMotion()){finish();return}
   const pools=[DEGS.map(d=>d.k),TIERS.flatMap(t=>t.names),MAJORS.map(m=>m.n),TRAITS.map(t=>t.k)];
-  if(reduce){S.id=id;rolling=false;render();return}
-  const els=[0,1,2,3].map(i=>$('#f'+i));
-  const btn=$('#rollbtn');if(btn)btn.disabled=true;
-  els.forEach((el,i)=>{
-    const iv=setInterval(()=>{el.textContent=pick(pools[i])},55);
-    setTimeout(()=>{clearInterval(iv);if(i===3){S.id=id;rolling=false;render()}else{el.textContent=[id.deg.k,id.school,id.major.n][i];el.style.color='var(--accent)'}},500+i*380);
-  });
+  const els=[0,1,2,3].map(i=>$('#f'+i));const btn=$('#rollbtn');if(btn)btn.disabled=true;
+  els.forEach((el,i)=>{if(!el)return;const iv=setInterval(()=>{el.textContent=pick(pools[i])},55);
+    setTimeout(()=>{clearInterval(iv);if(i===3)finish();else{el.textContent=[id.deg.k,id.school,id.major.n][i];el.style.color='var(--blue)'}},500+i*380)});
+}
+function startRun(id,init){
+  S=freshRun(id,init);newBoard();
+  addLog(`秋招开始。你是${id.school}${id.major.n}专业的${id.deg.k}应届生。`,'');
+  S.queue=[{t:'chapter',ch:1},{t:'story'}];save();render();runQueue();
 }
 
-/* ========== 事件绑定 ========== */
+/* ================= 事件绑定 ================= */
+let quitArm=0;
 document.addEventListener('click',e=>{
-  const b=e.target.closest('[data-a]');if(!b||b.disabled||busy&&b.dataset.a!=='copy')return;
+  const b=e.target.closest('[data-a]');if(!b||b.disabled)return;
   const a=b.dataset.a;
-  if(a==='roll'&&!rolling)animateRoll();
-  else if(a==='reroll'&&S.rerolls>0&&!rolling){S.rerolls--;S.id=null;_preview=null;render();animateRoll()}
-  else if(a==='start')startGame(true);
+  if(a==='roll')animateRoll();
+  else if(a==='reroll'&&S.rerolls>0&&!rolling){S.rerolls--;S.id=null;S.init=null;render();animateRoll()}
+  else if(a==='start'&&S.id)startRun(S.id,S.init);
   else if(a==='act')doAct(b.dataset.k);
   else if(a==='apply')apply(+b.dataset.u,false);
   else if(a==='ref')apply(+b.dataset.u,true);
   else if(a==='end')endWeek();
   else if(a==='fold'){showDead=!showDead;render()}
-  else if(a==='sign'){S.signed=S.apps.find(x=>x.id===+b.dataset.i);render()}
-  else if(a==='again'){S={phase:'roll',id:S.id,rerolls:S.rerolls,init:S.init};startGame(true)}
-  else if(a==='new'){S={phase:'roll',id:null,rerolls:2};_preview=null;showDead=false;render();window.scrollTo(0,0)}
-  else if(a==='copy'){
-    const t=$('#sh').textContent;
-    const ok=()=>{b.textContent='已复制'};
-    const fail=()=>{const r=document.createRange();r.selectNodeContents($('#sh'));const sel=getSelection();sel.removeAllRanges();sel.addRange(r);b.textContent='已选中，按 ⌘C / Ctrl+C 复制'};
-    try{navigator.clipboard.writeText(t).then(ok,fail)}catch(_){fail()}
+  else if(a==='sign'){const x=S.apps.find(y=>y.id===+b.dataset.i);if(x&&x.st==='offer'&&!busy()){signOffer(x);checkAch();save();render()}}
+  else if(a==='decline'){const x=S.apps.find(y=>y.id===+b.dataset.i);if(x&&x.st==='offer'&&!busy()){declineOffer(x);save();render()}}
+  else if(a==='destiny')chooseDestiny(+b.dataset.i);
+  else if(a==='img')saveImage(b);
+  else if(a==='share')shareResult(b);
+  else if(a==='again'){const id=S.id,init=S.init;showDead=false;startRun(id,init);window.scrollTo(0,0)}
+  else if(a==='new'){S=newRollState();showDead=false;save();render();window.scrollTo(0,0)}
+  else if(a==='quit'){
+    if(Date.now()-quitArm<3000){S=newRollState();showDead=false;closeDlg();save();render();window.scrollTo(0,0)}
+    else{quitArm=Date.now();b.textContent='再点一次确认';setTimeout(()=>{if(b.isConnected)b.textContent='重新开始'},3000)}
   }
 });
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&!$('#ov').hidden){const c=$('#cont')||$('#nx');if(c){e.preventDefault();c.click()}}});
 
-/* ========== 启动 ========== */
+/* ================= 启动 ================= */
 function boot(d){
-  if(d&&d.S&&d.S.phase){S=d.S;if(S.phase==='play'&&busy)busy=false}
-  render();
+  const saved=(d&&d.S)||store.get(SAVE_KEY);
+  if(saved&&saved.v===2&&saved.phase&&saved.phase!=='roll'&&saved.id){S=saved;render();if(S.queue&&S.queue.length)runQueue()}
+  else{S=newRollState();render()}
 }
-try{window.claude?.hot?.snapshot?.(()=>({S}))}catch(_){}
-window.claude?.hot?.ready?window.claude.hot.ready(boot):boot(window.claude?.hot?.data??{});
+try{window.claude&&window.claude.hot&&window.claude.hot.snapshot&&window.claude.hot.snapshot(()=>({S}))}catch(_){}
+if(window.claude&&window.claude.hot&&window.claude.hot.ready)window.claude.hot.ready(boot);else boot(window.claude&&window.claude.hot&&window.claude.hot.data);
 </script>
 </body>
 </html>
